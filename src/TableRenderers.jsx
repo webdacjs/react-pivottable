@@ -64,6 +64,10 @@ function getFormattedValue(value, aggregator, formatter) {
 
 function makeRenderer(opts = {}) {
   class TableRenderer extends React.PureComponent {
+    constructor() {
+      super();
+      this.state = {selectedrow: null};
+    }
     render() {
       const pivotData = new PivotData(this.props);
       const colAttrs = pivotData.props.cols;
@@ -149,6 +153,18 @@ function makeRenderer(opts = {}) {
             }
           : null;
 
+      const setSelectedRow = rowid => {
+        this.setState(prevState => ({
+          selectedrow: prevState.selectedrow === rowid ? null : rowid,
+        }));
+      };
+
+      const getRowClassName = rowid => {
+        if (rowid === this.state.selectedrow) {
+          return 'selected';
+        }
+      };
+
       function getCellValue(i, j, rowKey, colKey) {
         const aggregator = pivotData.getAggregator(rowKey, colKey);
         if (!multiValue) {
@@ -200,14 +216,14 @@ function makeRenderer(opts = {}) {
       return (
         <table className="pvtTable">
           <thead>
-            {colAttrs.map(function(c, j) {
+            {colAttrs.map((c, j) => {
               return (
                 <tr key={`colAttr${j}`}>
                   {j === 0 && rowAttrs.length !== 0 && (
                     <th colSpan={rowAttrs.length} rowSpan={colAttrs.length} />
                   )}
                   <th className="pvtAxisLabel">{c}</th>
-                  {colKeys.map(function(colKey, i) {
+                  {colKeys.map((colKey, i) => {
                     const x = spanSize(colKeys, i, j, multiValue, valsAttrs);
                     if (x === -1) {
                       return null;
@@ -268,7 +284,7 @@ function makeRenderer(opts = {}) {
           </thead>
 
           <tbody>
-            {rowKeys.map(function(rowKey, i) {
+            {rowKeys.map((rowKey, i) => {
               const totalAggregator = pivotData.getAggregator(rowKey, []);
               const totalAggregatorValue = totalAggregator.value();
               const totalRowValue = multiValue
@@ -277,8 +293,12 @@ function makeRenderer(opts = {}) {
                     .reduce((a, b) => a + b, 0)
                 : totalAggregatorValue;
               return (
-                <tr key={`rowKeyRow${i}`}>
-                  {rowKey.map(function(txt, j) {
+                <tr
+                  key={`rowKeyRow${i}`}
+                  className={getRowClassName(`rowKeyRow${i}`)}
+                  onClick={() => setSelectedRow(`rowKeyRow${i}`)}
+                >
+                  {rowKey.map((txt, j) => {
                     const x = spanSize(rowKeys, i, j);
                     if (x === -1) {
                       return null;
