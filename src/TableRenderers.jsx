@@ -55,6 +55,13 @@ function redColorScaleGenerator(values) {
   };
 }
 
+function getFormattedValue(value, aggregator, formatter) {
+  if (!formatter) {
+    return aggregator.format(value);
+  }
+  return formatter(value);
+}
+
 function makeRenderer(opts = {}) {
   class TableRenderer extends React.PureComponent {
     render() {
@@ -63,6 +70,10 @@ function makeRenderer(opts = {}) {
       const rowAttrs = pivotData.props.rows;
       const valsAttrs = pivotData.props.vals;
       const multiValue = pivotData.isMultipe;
+      const formatter = pivotData.props.formatter;
+      const hideColTotals = pivotData.props.hideColTotals;
+      const hideRowTotals = pivotData.props.hideRowTotals;
+
       const rowKeys = pivotData.getRowKeys();
       const colKeys = pivotData.getColKeys();
       const grandTotalAggregator = pivotData.getAggregator([], []);
@@ -70,6 +81,7 @@ function makeRenderer(opts = {}) {
       let valueCellColors = () => {};
       let rowTotalColors = () => {};
       let colTotalColors = () => {};
+
       if (opts.heatmapMode) {
         const colorScaleGenerator = this.props.tableColorScaleGenerator;
         const rowTotalValues = colKeys.map(x =>
@@ -150,7 +162,7 @@ function makeRenderer(opts = {}) {
               }
               style={valueCellColors(rowKey, colKey, aggregator.value())}
             >
-              {aggregator.format(aggregator.value())}
+              {getFormattedValue(aggregator.value(), aggregator, formatter)}
             </td>
           );
         }
@@ -163,7 +175,7 @@ function makeRenderer(opts = {}) {
             onClick={getClickHandler && getClickHandler(value, rowKey, colKey)}
             style={valueCellColors(rowKey, colKey, value)}
           >
-            {aggregator.format(value)}
+            {getFormattedValue(value, aggregator, formatter)}
           </td>
         ));
       }
@@ -202,7 +214,7 @@ function makeRenderer(opts = {}) {
                     );
                   })}
 
-                  {j === 0 && (
+                  {j === 0 && !hideRowTotals && (
                     <th
                       className="pvtTotalLabel"
                       rowSpan={
@@ -229,10 +241,11 @@ function makeRenderer(opts = {}) {
                   multiValue &&
                   valsAttrs &&
                   valsAttrs.map(x => <th>{x}</th>)}
-
-                <th className="pvtTotalLabel">
-                  {colAttrs.length === 0 ? 'Totals' : null}
-                </th>
+                {!hideRowTotals && (
+                  <th className="pvtTotalLabel">
+                    {colAttrs.length === 0 ? 'Totals' : null}
+                  </th>
+                )}
               </tr>
             )}
           </thead>
@@ -275,73 +288,92 @@ function makeRenderer(opts = {}) {
                     multiValue &&
                     valsAttrs &&
                     getCellValue(i, 0, rowKey, [])}
-                  <td
-                    className="pvtTotal"
-                    onClick={
-                      getClickHandler &&
-                      getClickHandler(totalRowValue, rowKey, [null])
-                    }
-                    style={colTotalColors(totalRowValue)}
-                  >
-                    {totalAggregator.format(totalRowValue)}
-                  </td>
+                  {!hideRowTotals && (
+                    <td
+                      className="pvtTotal"
+                      onClick={
+                        getClickHandler &&
+                        getClickHandler(totalRowValue, rowKey, [null])
+                      }
+                      style={colTotalColors(totalRowValue)}
+                    >
+                      {getFormattedValue(
+                        totalRowValue,
+                        totalAggregator,
+                        formatter
+                      )}
+                    </td>
+                  )}
                 </tr>
               );
             })}
 
-            <tr>
-              <th
-                className="pvtTotalLabel"
-                colSpan={rowAttrs.length + (colAttrs.length === 0 ? 0 : 1)}
-              >
-                Totals
-              </th>
+            {!hideColTotals && (
+              <tr>
+                <th
+                  className="pvtTotalLabel"
+                  colSpan={rowAttrs.length + (colAttrs.length === 0 ? 0 : 1)}
+                >
+                  Totals
+                </th>
 
-              {colKeys.map(function(colKey, i) {
-                const totalAggregator = pivotData.getAggregator([], colKey);
-                if (!multiValue) {
-                  return (
+                {colKeys.map(function(colKey, i) {
+                  const totalAggregator = pivotData.getAggregator([], colKey);
+                  if (!multiValue) {
+                    return (
+                      <td
+                        className="pvtTotal"
+                        key={`total${i}`}
+                        onClick={
+                          getClickHandler &&
+                          getClickHandler(
+                            totalAggregator.value(),
+                            [null],
+                            colKey
+                          )
+                        }
+                        style={rowTotalColors(totalAggregator.value())}
+                      >
+                        {totalAggregator.format(totalAggregator.value())}
+                      </td>
+                    );
+                  }
+                  const totalValuesWithKeys = totalAggregator.value();
+                  const totalvalues = Object.keys(totalValuesWithKeys).map(
+                    k => totalValuesWithKeys[k]
+                  );
+                  return totalvalues.map((value, x) => (
                     <td
-                      className="pvtTotal"
-                      key={`total${i}`}
+                      className="pvtVal"
+                      key={`total${i}-${x}`}
                       onClick={
                         getClickHandler &&
-                        getClickHandler(totalAggregator.value(), [null], colKey)
+                        getClickHandler(value, [null], colKey)
                       }
-                      style={rowTotalColors(totalAggregator.value())}
+                      style={rowTotalColors(value)}
                     >
-                      {totalAggregator.format(totalAggregator.value())}
+                      {totalAggregator.format(value)}
                     </td>
-                  );
-                }
-                const totalValuesWithKeys = totalAggregator.value();
-                const totalvalues = Object.keys(totalValuesWithKeys).map(
-                  k => totalValuesWithKeys[k]
-                );
-                return totalvalues.map((value, x) => (
-                  <td
-                    className="pvtVal"
-                    key={`total${i}-${x}`}
-                    onClick={
-                      getClickHandler && getClickHandler(value, [null], colKey)
-                    }
-                    style={rowTotalColors(value)}
-                  >
-                    {totalAggregator.format(value)}
-                  </td>
-                ));
-              })}
+                  ));
+                })}
 
-              <td
-                onClick={
-                  getClickHandler &&
-                  getClickHandler(grandTotalAggregator.value(), [null], [null])
-                }
-                className="pvtGrandTotal"
-              >
-                {grandTotalAggregator.format(grandTotalAggregator.value())}
-              </td>
-            </tr>
+                {!hideRowTotals && (
+                  <td
+                    onClick={
+                      getClickHandler &&
+                      getClickHandler(
+                        grandTotalAggregator.value(),
+                        [null],
+                        [null]
+                      )
+                    }
+                    className="pvtGrandTotal"
+                  >
+                    {grandTotalAggregator.format(grandTotalAggregator.value())}
+                  </td>
+                )}
+              </tr>
+            )}
           </tbody>
         </table>
       );

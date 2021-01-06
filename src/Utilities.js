@@ -426,7 +426,7 @@ aggregatorTemplates.countUnique = f =>
   aggregatorTemplates.uniques(x => x.length, f);
 aggregatorTemplates.listUnique = s =>
   aggregatorTemplates.uniques(
-    x => x.join(s), 
+    x => x.join(s),
     x => x
   );
 aggregatorTemplates.max = f => aggregatorTemplates.extremes('max', f);
