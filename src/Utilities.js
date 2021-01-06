@@ -426,7 +426,7 @@ aggregatorTemplates.countUnique = f =>
   aggregatorTemplates.uniques(x => x.length, f);
 aggregatorTemplates.listUnique = s =>
   aggregatorTemplates.uniques(
-    x => x.join(s),
+    x => x.join(s), 
     x => x
   );
 aggregatorTemplates.max = f => aggregatorTemplates.extremes('max', f);
@@ -570,6 +570,9 @@ class PivotData {
       .toLowerCase()
       .includes('multi');
     this.tree = {};
+    this.formatter = this.props.formatter;
+    this.hideColTotals = this.props.hideColTotals;
+    this.hideRowTotals = this.props.hideRowTotals;
     this.rowKeys = [];
     this.colKeys = [];
     this.rowTotals = {};
