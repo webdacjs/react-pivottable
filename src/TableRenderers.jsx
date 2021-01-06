@@ -163,6 +163,7 @@ function makeRenderer(opts = {}) {
         if (rowid === this.state.selectedrow) {
           return 'selected';
         }
+        return null
       };
 
       function getCellValue(i, j, rowKey, colKey) {
