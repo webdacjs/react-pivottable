@@ -570,6 +570,9 @@ class PivotData {
       .toLowerCase()
       .includes('multi');
     this.tree = {};
+    this.formatter = this.props.formatter;
+    this.hideColTotals = this.props.hideColTotals;
+    this.hideRowTotals = this.props.hideRowTotals;
     this.rowKeys = [];
     this.colKeys = [];
     this.rowTotals = {};
