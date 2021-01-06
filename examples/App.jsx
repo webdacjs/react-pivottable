@@ -39,11 +39,13 @@ export default class App extends React.Component {
             filename: 'Sample Dataset: Tips',
             pivotState: {
                 data: tips,
-                rows: ['Payer Gender'],
-                cols: ['Party Size'],
-                aggregatorName: 'Sum',
-                vals: ['Tip', 'Total Bill'],
+                rows: ['Payer Gender', 'Day of Week'],
+                cols: [],
+                aggregatorName: 'MultiSum',
+                vals: ['Tip', 'Total Bill', 'Party Size'],
                 rendererName: 'Table',
+                formatter: x => parseFloat(x).toFixed(1),
+                hideRowTotals: true,
                 sorters: {
                     Meal: sortAs(['Lunch', 'Dinner']),
                     'Day of Week': sortAs([

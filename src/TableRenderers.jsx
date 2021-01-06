@@ -180,6 +180,23 @@ function makeRenderer(opts = {}) {
         ));
       }
 
+      function getMultipleAttrNoColumnsTotals() {
+        const totalAggregator = pivotData.getAggregator([], []);
+        const totalValuesWithKeys = totalAggregator.value();
+        const totalvalues = Object.keys(totalValuesWithKeys).map(
+          k => totalValuesWithKeys[k]
+        );
+        return totalvalues.map((value, x) => (
+          <td
+            className="pvtVal"
+            key={`total${x}`}
+            style={rowTotalColors(value)}
+          >
+            {getFormattedValue(value, totalAggregator, formatter)}
+          </td>
+        ));
+      }
+
       return (
         <table className="pvtTable">
           <thead>
@@ -334,7 +351,11 @@ function makeRenderer(opts = {}) {
                         }
                         style={rowTotalColors(totalAggregator.value())}
                       >
-                        {totalAggregator.format(totalAggregator.value())}
+                        {getFormattedValue(
+                          totalAggregator.value(),
+                          totalAggregator,
+                          formatter
+                        )}
                       </td>
                     );
                   }
@@ -352,10 +373,15 @@ function makeRenderer(opts = {}) {
                       }
                       style={rowTotalColors(value)}
                     >
-                      {totalAggregator.format(value)}
+                      {getFormattedValue(value, totalAggregator, formatter)}
                     </td>
                   ));
                 })}
+
+                {colAttrs.length === 0 &&
+                  multiValue &&
+                  valsAttrs &&
+                  getMultipleAttrNoColumnsTotals()}
 
                 {!hideRowTotals && (
                   <td
