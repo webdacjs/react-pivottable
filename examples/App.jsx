@@ -54,18 +54,7 @@ export default class App extends React.Component {
                         'Saturday',
                         'Sunday',
                     ]),
-                },
-                tableOptions: {
-                    clickCallback: function(e, value, filters, pivotData) {
-                        var names = [];
-                        pivotData.forEachMatchingRecord(filters, function(
-                            record
-                        ) {
-                            names.push(record.Meal);
-                        });
-                        alert(names.join('\n'));
-                    },
-                },
+                }
             },
         });
     }
