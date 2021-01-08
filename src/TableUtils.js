@@ -41,23 +41,69 @@ export function getSpanSize(arr, i, j, multi, valsAttrs) {
   return len;
 }
 
-// It formats the resulting value either with the one 
-// provided in the parameter or the default in the 
+// It formats the resulting value either with the one
+// provided in the parameter or the default in the
 // aggregagor.
 export function getFormattedValue(value, aggregator, formatter) {
-    if (!formatter) {
-      return aggregator.format(value);
-    }
-    return formatter(value);
+  if (!formatter) {
+    return aggregator.format(value);
+  }
+  return formatter(value);
 }
 
-// Function for heatmap table
+// Functions for heatmap table if required.
 export function redColorScaleGenerator(values) {
-    const min = Math.min.apply(Math, values);
-    const max = Math.max.apply(Math, values);
-    return x => {
-      // eslint-disable-next-line no-magic-numbers
-      const nonRed = 255 - Math.round((255 * (x - min)) / (max - min));
-      return {backgroundColor: `rgb(255,${nonRed},${nonRed})`};
-    };
+  const min = Math.min.apply(Math, values);
+  const max = Math.max.apply(Math, values);
+  return x => {
+    // eslint-disable-next-line no-magic-numbers
+    const nonRed = 255 - Math.round((255 * (x - min)) / (max - min));
+    return {backgroundColor: `rgb(255,${nonRed},${nonRed})`};
+  };
+}
+
+export function getHeatmapColors(
+  tableColorScaleGenerator,
+  colKeys,
+  rowKeys,
+  pivotData,
+  opts
+) {
+  let valueCellColors = () => {};
+  let rowTotalColors = () => {};
+  let colTotalColors = () => {};
+
+  const colorScaleGenerator = tableColorScaleGenerator;
+  const rowTotalValues = colKeys.map(x =>
+    pivotData.getAggregator([], x).value()
+  );
+  rowTotalColors = colorScaleGenerator(rowTotalValues);
+  const colTotalValues = rowKeys.map(x =>
+    pivotData.getAggregator(x, []).value()
+  );
+  colTotalColors = colorScaleGenerator(colTotalValues);
+
+  if (opts.heatmapMode === 'full') {
+    const allValues = [];
+    rowKeys.map(r =>
+      colKeys.map(c => allValues.push(pivotData.getAggregator(r, c).value()))
+    );
+    const colorScale = colorScaleGenerator(allValues);
+    valueCellColors = (r, c, v) => colorScale(v);
+  } else if (opts.heatmapMode === 'row') {
+    const rowColorScales = {};
+    rowKeys.map(r => {
+      const rowValues = colKeys.map(x => pivotData.getAggregator(r, x).value());
+      rowColorScales[r] = colorScaleGenerator(rowValues);
+    });
+    valueCellColors = (r, c, v) => rowColorScales[r](v);
+  } else if (opts.heatmapMode === 'col') {
+    const colColorScales = {};
+    colKeys.map(c => {
+      const colValues = rowKeys.map(x => pivotData.getAggregator(x, c).value());
+      colColorScales[c] = colorScaleGenerator(colValues);
+    });
+    valueCellColors = (r, c, v) => colColorScales[c](v);
   }
+  return [valueCellColors, rowTotalColors, colTotalColors];
+}

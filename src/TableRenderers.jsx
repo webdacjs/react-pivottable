@@ -5,6 +5,7 @@ import {
   getSpanSize,
   getFormattedValue,
   redColorScaleGenerator,
+  getHeatmapColors,
 } from './TableUtils';
 
 function makeRenderer(opts = {}) {
@@ -32,44 +33,13 @@ function makeRenderer(opts = {}) {
       let colTotalColors = () => {};
 
       if (opts.heatmapMode) {
-        const colorScaleGenerator = this.props.tableColorScaleGenerator;
-        const rowTotalValues = colKeys.map(x =>
-          pivotData.getAggregator([], x).value()
+        [valueCellColors, rowTotalColors, colTotalColors] = getHeatmapColors(
+          this.props.tableColorScaleGenerator,
+          colKeys,
+          rowKeys,
+          pivotData,
+          opts
         );
-        rowTotalColors = colorScaleGenerator(rowTotalValues);
-        const colTotalValues = rowKeys.map(x =>
-          pivotData.getAggregator(x, []).value()
-        );
-        colTotalColors = colorScaleGenerator(colTotalValues);
-
-        if (opts.heatmapMode === 'full') {
-          const allValues = [];
-          rowKeys.map(r =>
-            colKeys.map(c =>
-              allValues.push(pivotData.getAggregator(r, c).value())
-            )
-          );
-          const colorScale = colorScaleGenerator(allValues);
-          valueCellColors = (r, c, v) => colorScale(v);
-        } else if (opts.heatmapMode === 'row') {
-          const rowColorScales = {};
-          rowKeys.map(r => {
-            const rowValues = colKeys.map(x =>
-              pivotData.getAggregator(r, x).value()
-            );
-            rowColorScales[r] = colorScaleGenerator(rowValues);
-          });
-          valueCellColors = (r, c, v) => rowColorScales[r](v);
-        } else if (opts.heatmapMode === 'col') {
-          const colColorScales = {};
-          colKeys.map(c => {
-            const colValues = rowKeys.map(x =>
-              pivotData.getAggregator(x, c).value()
-            );
-            colColorScales[c] = colorScaleGenerator(colValues);
-          });
-          valueCellColors = (r, c, v) => colColorScales[c](v);
-        }
       }
 
       const getClickHandler =
