@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {PivotData} from './Utilities';
-import {getSpanSize, getFormattedValue, redColorScaleGenerator} from './TableUtils';
-
+import {
+  getSpanSize,
+  getFormattedValue,
+  redColorScaleGenerator,
+} from './TableUtils';
 
 function makeRenderer(opts = {}) {
   class TableRenderer extends React.PureComponent {
@@ -156,8 +159,8 @@ function makeRenderer(opts = {}) {
         ));
       }
 
-      return (
-        <table className="pvtTable">
+      function getTableHeader() {
+        return (
           <thead>
             {colAttrs.map((c, j) => {
               return (
@@ -225,7 +228,11 @@ function makeRenderer(opts = {}) {
               </tr>
             )}
           </thead>
+        );
+      }
 
+      function getTableBody() {
+        return (
           <tbody>
             {rowKeys.map((rowKey, i) => {
               const totalAggregator = pivotData.getAggregator(rowKey, []);
@@ -364,6 +371,13 @@ function makeRenderer(opts = {}) {
               </tr>
             )}
           </tbody>
+        );
+      }
+
+      return (
+        <table className="pvtTable">
+          {getTableHeader()}
+          {getTableBody()}
         </table>
       );
     }
