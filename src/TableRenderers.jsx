@@ -7,8 +7,8 @@ import {
   redColorScaleGenerator,
   getHeatmapColors,
 } from './TableUtils';
-import TSVExportRenderer from './TsvRenderer'
-import RawExportRenderer from './RawRenderer'
+import TSVExportRenderer from './TsvRenderer';
+import RawExportRenderer from './RawRenderer';
 
 function makeRenderer(opts = {}) {
   class TableRenderer extends React.PureComponent {
