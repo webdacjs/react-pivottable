@@ -45,7 +45,17 @@ class TableBarchartRenderer extends React.PureComponent {
       if (!showBarValues) {
         return;
       }
-      return value > 0 ? value : '';
+      return value;
+    }
+
+    function getBarChart(index, width, value) {
+      return (
+        <div className="bar-chart-bar" key={`bar-chart-${index}`}>
+          <div className={`bar bar${index + 1}`} style={{width: `${width}%`}}>
+            {value}
+          </div>
+        </div>
+      );
     }
 
     function getCellValue(i, j, rowKey, colKey) {
@@ -58,16 +68,13 @@ class TableBarchartRenderer extends React.PureComponent {
       const values = keys.map(k => valuesWithKeys[k]);
       return (
         <td className="pvtVal pvtValBarChart">
-          {values.map((value, i) => (
-            <div className="bar-chart-bar" key={`bar-chart-${i}`}>
-              <div
-                className={`bar bar${i + 1}`}
-                style={{width: `${getPercentageFromValue(value, keys[i])}%`}}
-              >
-                {getBarValue(value)}
-              </div>
-            </div>
-          ))}
+          {values.map((value, i) =>
+            getBarChart(
+              i,
+              getPercentageFromValue(value, keys[i]),
+              getBarValue(value)
+            )
+          )}
         </td>
       );
     }
