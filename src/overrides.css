@@ -36,6 +36,10 @@ table.pvtTable tbody tr:nth-child(even) td {
     background: #f8f8f8;
 }
 
+table.pvtTable tbody tr:nth-child(even) td.pvtValBarChart {
+    background: #fff;
+}
+
 table.pvtTable tbody tr.selected td {
     background: #bbe4f2;
 }

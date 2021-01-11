@@ -49,7 +49,7 @@ class TableBarchartRenderer extends React.PureComponent {
       const keys = Object.keys(valuesWithKeys);
       const values = keys.map(k => valuesWithKeys[k]);
       return (
-        <td className="pvtVal">
+        <td className="pvtVal pvtValBarChart">
           {values.map((value, i) => (
             <div className="bar-chart-bar">
               <div
