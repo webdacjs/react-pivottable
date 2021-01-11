@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {PivotData} from './Utilities';
 import {getSpanSize} from './TableUtils';
-import {getMaxValsAttrs} from './TableBarchartUtils';
+import {getMaxValsAttrs, getMinValsAttrs} from './TableBarchartUtils';
 
 class TableBarchartRenderer extends React.PureComponent {
   constructor() {
@@ -20,7 +20,10 @@ class TableBarchartRenderer extends React.PureComponent {
       pivotData.rowTotals,
       pivotData.props.vals
     );
-
+    const minValsAttrs = getMinValsAttrs(
+      pivotData.rowTotals,
+      pivotData.props.vals
+    );
     const rowKeys = pivotData.getRowKeys();
 
     const setSelectedRow = rowid => {
@@ -45,13 +48,21 @@ class TableBarchartRenderer extends React.PureComponent {
       if (!showBarValues) {
         return;
       }
-      return <span className='barChartLabel'>{value}</span>;
+      return <span className="barChartLabel">{value}</span>;
     }
 
-    function getBarChart(index, width, value) {
+    function getBarChart(index, width, value, thiskey) {
+      const minPerc =
+        minValsAttrs[thiskey] > 0
+          ? 0
+          : getPercentageFromValue(minValsAttrs[thiskey], thiskey) * -1;
+      const chartStyle =
+        width > 0
+          ? {width: `${width}%`, marginLeft: `${minPerc}%`}
+          : {width: `${width * -1}%`, marginLeft: `${minPerc - width * -1}%`};
       return (
         <div className="bar-chart-bar" key={`bar-chart-${index}`}>
-          <div className={`bar bar${index + 1}`} style={{width: `${width}%`}}>
+          <div className={`bar bar${index + 1}`} style={chartStyle}>
             {value}
           </div>
         </div>
@@ -72,7 +83,8 @@ class TableBarchartRenderer extends React.PureComponent {
             getBarChart(
               i,
               getPercentageFromValue(value, keys[i]),
-              getBarValue(value)
+              getBarValue(value),
+              keys[i]
             )
           )}
         </td>
