@@ -153,3 +153,8 @@ table.pvtTable thead tr:first-child th.pvtAxisLabel {
 .bar1 {
     background-color: #e05759
 }
+
+.barChartLabel {
+    color: #eee;
+    margin-right: 0.3em;
+}
