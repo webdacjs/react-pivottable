@@ -15,6 +15,7 @@ class TableBarchartRenderer extends React.PureComponent {
     const rowAttrs = pivotData.props.rows;
     const valsAttrs = pivotData.props.vals;
     const multiValue = pivotData.isMultipe;
+    const showBarValues = this.props.showBarValues;
     const maxValsAttrs = getMaxValsAttrs(
       pivotData.rowTotals,
       pivotData.props.vals
@@ -40,6 +41,13 @@ class TableBarchartRenderer extends React.PureComponent {
       return percValue;
     }
 
+    function getBarValue(value) {
+      if (!showBarValues) {
+        return;
+      }
+      return value > 0 ? value : '';
+    }
+
     function getCellValue(i, j, rowKey, colKey) {
       const aggregator = pivotData.getAggregator(rowKey, colKey);
       if (!multiValue) {
@@ -56,7 +64,7 @@ class TableBarchartRenderer extends React.PureComponent {
                 className={`bar bar${i + 1}`}
                 style={{width: `${getPercentageFromValue(value, keys[i])}%`}}
               >
-                {value > 0 ? value : ''}
+                {getBarValue(value)}
               </div>
             </div>
           ))}
