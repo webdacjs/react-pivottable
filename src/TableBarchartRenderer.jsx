@@ -10,7 +10,6 @@ class TableBarchartRenderer extends React.PureComponent {
     this.state = {selectedrow: null};
   }
   render() {
-    console.log({props: this.props})
     const pivotData = new PivotData(this.props);
     const colAttrs = pivotData.props.cols;
     const rowAttrs = pivotData.props.rows;
