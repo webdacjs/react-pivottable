@@ -10,6 +10,7 @@ class TableBarchartRenderer extends React.PureComponent {
     this.state = {selectedrow: null};
   }
   render() {
+    console.log({props: this.props})
     const pivotData = new PivotData(this.props);
     const colAttrs = pivotData.props.cols;
     const rowAttrs = pivotData.props.rows;
@@ -51,9 +52,9 @@ class TableBarchartRenderer extends React.PureComponent {
       return (
         <td className="pvtVal pvtValBarChart">
           {values.map((value, i) => (
-            <div className="bar-chart-bar">
+            <div className="bar-chart-bar" key={`bar-chart-${i}`}>
               <div
-                class={`bar bar${i + 1}`}
+                className={`bar bar${i + 1}`}
                 style={{width: `${getPercentageFromValue(value, keys[i])}%`}}
               >
                 {value > 0 ? value : ''}
@@ -79,7 +80,7 @@ class TableBarchartRenderer extends React.PureComponent {
               {colAttrs.length === 0 && multiValue && valsAttrs && (
                 <th className="pvtAttrLabel" key="attrKeyJoined">
                   {valsAttrs.map((x, i) => (
-                    <span key={`attHead`} style={{marginRight: '2em'}}>
+                    <span key={`attHead${i}`} style={{marginRight: '2em'}}>
                       {x}
                     </span>
                   ))}
