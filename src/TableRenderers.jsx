@@ -9,6 +9,7 @@ import {
 } from './TableUtils';
 import TSVExportRenderer from './TsvRenderer';
 import RawExportRenderer from './RawRenderer';
+import TableBarchartRenderer from './TableBarchartRenderer';
 
 function makeRenderer(opts = {}) {
   class TableRenderer extends React.PureComponent {
@@ -191,7 +192,11 @@ function makeRenderer(opts = {}) {
                 {colAttrs.length === 0 &&
                   multiValue &&
                   valsAttrs &&
-                  valsAttrs.map(x => <th>{x}</th>)}
+                  valsAttrs.map((x, i) => (
+                    <th className="pvtAttrLabel" key={`attrKey${i}`}>
+                      {x}
+                    </th>
+                  ))}
                 {!hideRowTotals && (
                   <th className="pvtTotalLabel">
                     {colAttrs.length === 0 ? 'Totals' : null}
@@ -369,6 +374,7 @@ export default {
   'Table Heatmap': makeRenderer({heatmapMode: 'full'}),
   'Table Col Heatmap': makeRenderer({heatmapMode: 'col'}),
   'Table Row Heatmap': makeRenderer({heatmapMode: 'row'}),
+  'Table Barchart': TableBarchartRenderer,
   'Exportable TSV': TSVExportRenderer,
   'Raw Exportable JSON': RawExportRenderer,
 };
