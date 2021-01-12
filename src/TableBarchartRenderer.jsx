@@ -62,9 +62,14 @@ class TableBarchartRenderer extends React.PureComponent {
       return percValue;
     }
 
-    function getBarValue(value) {
+    function getBarValue(value, percentage) {
       if (!showBarValues) {
         return <span className="barChartLabel"></span>;
+      }
+      if (usePercentages) {
+        return (
+          <span className="barChartLabel">{`${percentage.toFixed(1)}%`}</span>
+        );
       }
       return <span className="barChartLabel">{value}</span>;
     }
@@ -107,7 +112,7 @@ class TableBarchartRenderer extends React.PureComponent {
                 getBarChart(
                   i,
                   getPercentageFromValue(value, keys[i]),
-                  getBarValue(value),
+                  getBarValue(value, getPercentageFromValue(value, keys[i])),
                   keys[i],
                   stacked
                 )
@@ -119,7 +124,7 @@ class TableBarchartRenderer extends React.PureComponent {
               getBarChart(
                 i,
                 getPercentageFromValue(value, keys[i]),
-                getBarValue(value),
+                getBarValue(value, getPercentageFromValue(value, keys[i])),
                 keys[i],
                 stacked
               )
