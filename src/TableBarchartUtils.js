@@ -107,5 +107,6 @@ export function getLegendValues(
   const legendMarkers = [...Array(steps).keys()].map(x =>
     getAdjustedValue((x + 1) * stepValue, usePercentages)
   );
+  // Not showing the first and last element from the legend values.
   return ['', ...legendMarkers.slice(0, -1)];
 }
