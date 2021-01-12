@@ -161,9 +161,9 @@ class TableBarchartRenderer extends React.PureComponent {
               )}
             </tr>,
             <tr style={{display: showLegend ? 'contents' : 'none'}}>
-              <th colSpan={rowAttrs.length}></th>
+              <th className="pvLegendValue" colSpan={rowAttrs.length}></th>
               {legendValues.map(val => (
-                <th>
+                <th className="pvLegendValue">
                   <span className="legendVal">{val}</span>
                 </th>
               ))}
