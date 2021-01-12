@@ -32,7 +32,12 @@ class TableBarchartRenderer extends React.PureComponent {
       pivotData.props.vals
     );
 
-    const legendValues = getLegendValues(maxValsAttrs, minValsAttrs, steps, usePercentages);
+    const legendValues = getLegendValues(
+      maxValsAttrs,
+      minValsAttrs,
+      steps,
+      usePercentages
+    );
 
     const rowKeys = pivotData.getRowKeys();
 

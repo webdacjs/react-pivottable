@@ -10,6 +10,12 @@ function getTotalRowsValsAttr(rowTotals) {
     .flat();
 }
 
+const getAbsoluteMin = minValsAttrs =>
+  Math.min(...Object.keys(minValsAttrs).map(x => minValsAttrs[x]));
+
+const getAbsoluteMax = maxValsAttrs =>
+  Math.max(...Object.keys(maxValsAttrs).map(x => maxValsAttrs[x]));
+
 // Function to get the maximum value for each one fhe vals (used to calculate the bar widths).
 export function getMaxValsAttrs(rowTotals, vals) {
   const totalRowsValsAttr = getTotalRowsValsAttr(rowTotals);
@@ -22,7 +28,11 @@ export function getMaxValsAttrs(rowTotals, vals) {
     );
     return obj;
   }, {});
-  return maxValsAttrs;
+  const absoluteMax = getAbsoluteMax(maxValsAttrs);
+  return vals.reduce((obj, val) => {
+    obj[val] = absoluteMax;
+    return obj;
+  }, {});
 }
 
 // Function to get the minimum value for each one fhe vals (used to calculate the bar widths).
@@ -37,25 +47,28 @@ export function getMinValsAttrs(rowTotals, vals) {
     );
     return obj;
   }, {});
-  return minValsAttrs;
+  const absoluteMin = getAbsoluteMin(minValsAttrs);
+  return vals.reduce((obj, val) => {
+    obj[val] = absoluteMin;
+    return obj;
+  }, {});
 }
 
-function getAdjustedValue (val, usePercentages) {
-    if (usePercentages) {
-        return `${val.toFixed(0)}%`
-    }
-    return  val > 1000 
-        ? `${(val / 1000).toFixed(0)}k`
-        : val.toFixed(0)
+function getAdjustedValue(val, usePercentages) {
+  if (usePercentages) {
+    return `${val.toFixed(0)}%`;
+  }
+  return val > 1000 ? `${(val / 1000).toFixed(0)}k` : val.toFixed(0);
 }
 
-export function getLegendValues(maxValsAttrs, minValsAttrs, steps, usePercentages) {
-  const absoluteMin = usePercentages ? 1 : Math.min(
-    ...Object.keys(minValsAttrs).map(x => minValsAttrs[x])
-  );
-  const absoluteMax = usePercentages ? 100 : Math.max(
-    ...Object.keys(maxValsAttrs).map(x => maxValsAttrs[x])
-  );
+export function getLegendValues(
+  maxValsAttrs,
+  minValsAttrs,
+  steps,
+  usePercentages
+) {
+  const absoluteMin = usePercentages ? 1 : getAbsoluteMin(minValsAttrs);
+  const absoluteMax = usePercentages ? 100 : getAbsoluteMax(maxValsAttrs);
   const stepValue = (absoluteMax - absoluteMin) / steps;
   const legendMarkers = [...Array(steps).keys()].map(x =>
     getAdjustedValue((x + 1) * stepValue, usePercentages)
