@@ -127,7 +127,7 @@ class TableBarchartRenderer extends React.PureComponent {
                 </th>
               )}
             </tr>,
-            <tr style={{display: showLegend ? 'block' : 'none'}}>
+            <tr style={{display: showLegend ? 'contents' : 'none'}}>
               <th colspan={rowAttrs.length}></th>
               {legendValues.map(val => (
                 <th>
