@@ -1,0 +1,160 @@
+table.pvtTable {
+    width: 100%;
+    font-size: 0.7em;
+    text-align: left;
+    border-collapse: collapse;
+    margin-top: 3px;
+    margin-left: 3px;
+    font-family: SuisseIntl, Arial, sans-serif ! important;
+}
+
+table.pvtTable thead tr th,
+table.pvtTable tbody tr th {
+    border-bottom: 1px solid #ccc;
+    font-size: 1em;
+    vertical-align: top;
+    text-align: left;
+}
+
+table.pvtTable .pvtColLabel {
+    text-align: top;
+}
+
+table.pvtTable .pvtTotalLabel {
+    text-align: right;
+}
+
+table.pvtTable tbody tr td {
+    color: #333;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    vertical-align: top;
+    text-align: right;
+}
+
+table.pvtTable tbody tr:nth-child(even) td {
+    background: #f8f8f8;
+}
+
+table.pvtTable tbody tr:nth-child(even) td.pvtValBarChart {
+    background: #fff;
+}
+
+table.pvtTable tbody tr.selected td {
+    background: #bbe4f2;
+}
+
+.pvtTotal,
+.pvtGrandTotal {
+    font-weight: bold;
+}
+
+.pvtRowOrder,
+.pvtColOrder {
+    cursor: pointer;
+    width: 15px;
+    margin-left: 5px;
+    display: inline-block;
+    user-select: none;
+    text-decoration: none !important;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -ms-user-select: none;
+}
+
+.pvtVals {
+    text-align: top;
+    white-space: nowrap;
+    vertical-align: top;
+    padding-bottom: 12px;
+}
+
+.pvtRows {
+    height: 35px;
+}
+
+.pvtOnly {
+    display: none;
+    width: 35px;
+    float: left;
+    font-size: 12px;
+    padding-left: 5px;
+    cursor: pointer;
+}
+
+.pvtOnlySpacer {
+    display: block;
+    width: 35px;
+    float: left;
+}
+
+.pvtCheckContainer p:hover .pvtOnly {
+    display: block;
+}
+
+.pvtCheckContainer p:hover .pvtOnlySpacer {
+    display: none;
+}
+
+.pvtRendererArea {
+    padding: 5px;
+}
+
+table.pvtTable thead tr:first-child th {
+    text-align: right;
+    background-color: #fff;
+}
+
+table.pvtTable thead tr:first-child th.pvtAxisLabel {
+    text-align: left;
+    background-color: #fff;
+    white-space: nowrap;
+    padding-right: 10px;
+    width: 1%;
+}
+
+.pvtRowLabel {
+    padding-right: 10px;
+}
+
+.pvtRowLabel {
+    font-weight: 300;
+}
+
+
+/* Styles for CSS based  barcharts in the table
+
+    Based on: 
+    http://jsfiddle.net/annoyingmouse/tpdkxgve/
+*/
+
+.bar-chart-bar {
+    background-color: #e8e8e8;
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 15px;
+}
+
+.bar {
+    float: left;
+    height: 100%;
+}
+
+.bar2 {
+    background-color: #4e79a7;
+}
+
+.bar3 {
+    background-color: #e0c157
+}
+
+.bar1 {
+    background-color: #e05759
+}
+
+.barChartLabel {
+    color: #eee;
+    margin-right: 0.3em;
+}

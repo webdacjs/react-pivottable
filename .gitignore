@@ -1,6 +1,7 @@
 node_modules
 npm-debug.log
 examples/bundle.js
+examples/budget.js
 yarn.lock
 package-lock.json
 
