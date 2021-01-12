@@ -40,19 +40,25 @@ export function getMinValsAttrs(rowTotals, vals) {
   return minValsAttrs;
 }
 
-const getAdjustedValue = val =>
-  val > 1000 ? `${(val / 1000).toFixed(0)}k` : val.toFixed(0);
+function getAdjustedValue (val, usePercentages) {
+    if (usePercentages) {
+        return `${val.toFixed(0)}%`
+    }
+    return  val > 1000 
+        ? `${(val / 1000).toFixed(0)}k`
+        : val.toFixed(0)
+}
 
-export function getLegendValues(maxValsAttrs, minValsAttrs, steps) {
-  const absoluteMin = Math.min(
+export function getLegendValues(maxValsAttrs, minValsAttrs, steps, usePercentages) {
+  const absoluteMin = usePercentages ? 1 : Math.min(
     ...Object.keys(minValsAttrs).map(x => minValsAttrs[x])
   );
-  const absoluteMax = Math.max(
+  const absoluteMax = usePercentages ? 100 : Math.max(
     ...Object.keys(maxValsAttrs).map(x => maxValsAttrs[x])
   );
   const stepValue = (absoluteMax - absoluteMin) / steps;
   const legendMarkers = [...Array(steps).keys()].map(x =>
-    getAdjustedValue((x + 1) * stepValue)
+    getAdjustedValue((x + 1) * stepValue, usePercentages)
   );
   return ['', ...legendMarkers.slice(0, -1)];
 }
