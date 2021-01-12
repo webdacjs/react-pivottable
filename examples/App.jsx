@@ -1,9 +1,9 @@
 import React from 'react';
 import tips from './tips';
-import {sortAs} from '../src/Utilities';
 import TableRenderers from '../src/TableRenderers';
 import PivotTableUI from '../src/PivotTableUI';
 import '../src/pivottable.css';
+import '../src/overrides.css';
 import Dropzone from 'react-dropzone';
 import Papa from 'papaparse';
 
@@ -42,19 +42,23 @@ export default class App extends React.Component {
                 rows: ['Payer Gender', 'Day of Week'],
                 cols: [],
                 aggregatorName: 'MultiSum',
-                vals: ['Tip', 'Total Bill', 'Party Size'],
-                rendererName: 'Table',
+                vals: ['Tip', 'Total Bill'],
+                rendererName: 'Table Barchart',
                 formatter: x => parseFloat(x).toFixed(1),
+                showLegend: true,
+                minVal: 1,
+                maxVal: 100,
+                postprocessfn: obj => {
+                    const tipPerc = (obj['Tip'] / obj['Total Bill']) * 100
+                    const totPerc = 100 - tipPerc
+                    return {
+                        Tip: tipPerc,
+                        'Total Bill': totPerc
+                    }
+                },
+                stacked: true,
+                usePercentages: true,
                 hideRowTotals: true,
-                sorters: {
-                    Meal: sortAs(['Lunch', 'Dinner']),
-                    'Day of Week': sortAs([
-                        'Thursday',
-                        'Friday',
-                        'Saturday',
-                        'Sunday',
-                    ]),
-                }
             },
         });
     }
