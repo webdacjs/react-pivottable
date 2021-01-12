@@ -32,7 +32,7 @@ class TableBarchartRenderer extends React.PureComponent {
       pivotData.props.vals
     );
 
-    const legendValues = getLegendValues(maxValsAttrs, minValsAttrs, steps);
+    const legendValues = getLegendValues(maxValsAttrs, minValsAttrs, steps, usePercentages);
 
     const rowKeys = pivotData.getRowKeys();
 
@@ -88,7 +88,7 @@ class TableBarchartRenderer extends React.PureComponent {
       const keys = Object.keys(valuesWithKeys);
       const values = keys.map(k => valuesWithKeys[k]);
       return (
-        <td className="pvtVal pvtValBarChart" colspan={steps}>
+        <td className="pvtVal pvtValBarChart" colSpan={steps}>
           {values.map((value, i) =>
             getBarChart(
               i,
@@ -117,7 +117,7 @@ class TableBarchartRenderer extends React.PureComponent {
                 <th
                   className="pvtAttrLabel"
                   key="attrKeyJoined"
-                  colspan={steps}
+                  colSpan={steps}
                 >
                   {valsAttrs.map((x, i) => (
                     <span key={`attHead${i}`} style={{marginRight: '2em'}}>
@@ -128,7 +128,7 @@ class TableBarchartRenderer extends React.PureComponent {
               )}
             </tr>,
             <tr style={{display: showLegend ? 'contents' : 'none'}}>
-              <th colspan={rowAttrs.length}></th>
+              <th colSpan={rowAttrs.length}></th>
               {legendValues.map(val => (
                 <th>
                   <span className="legendVal">{val}</span>
