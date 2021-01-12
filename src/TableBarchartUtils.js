@@ -1,4 +1,5 @@
 const excludeKeys = ['push', 'value', 'format', 'numInputs'];
+const thousand = 1000
 
 function getTotalRowsValsAttr(rowTotals) {
   return Object.keys(rowTotals)
@@ -75,11 +76,11 @@ export function getMinValsAttrs(rowTotals, vals, stacked) {
   }, {});
 }
 
-function getAdjustedValue(val, usePercentages, stacked) {
+function getAdjustedValue(val, usePercentages) {
   if (usePercentages) {
     return `${val.toFixed(0)}%`;
   }
-  return val > 1000 ? `${(val / 1000).toFixed(1)}k` : val.toFixed(0);
+  return val > thousand ? `${(val / thousand).toFixed(1)}k` : val.toFixed(0);
 }
 
 export function getLegendValues(

@@ -7,6 +7,7 @@ import {
   getMinValsAttrs,
   getLegendValues,
 } from './TableBarchartUtils';
+const defaultSteps = 15
 
 class TableBarchartRenderer extends React.PureComponent {
   constructor() {
@@ -23,7 +24,7 @@ class TableBarchartRenderer extends React.PureComponent {
     const showBarValues = this.props.showBarValues;
     const showLegend = this.props.showLegend;
     const usePercentages = this.props.usePercentages;
-    const steps = this.props.legendSteps || 15;
+    const steps = this.props.legendSteps || defaultSteps;
     const maxValsAttrs = getMaxValsAttrs(
       pivotData.rowTotals,
       pivotData.props.vals,
