@@ -19,17 +19,20 @@ class TableBarchartRenderer extends React.PureComponent {
     const rowAttrs = pivotData.props.rows;
     const valsAttrs = pivotData.props.vals;
     const multiValue = pivotData.isMultipe;
+    const stacked = this.props.stacked;
     const showBarValues = this.props.showBarValues;
     const showLegend = this.props.showLegend;
     const usePercentages = this.props.usePercentages;
     const steps = this.props.legendSteps || 15;
     const maxValsAttrs = getMaxValsAttrs(
       pivotData.rowTotals,
-      pivotData.props.vals
+      pivotData.props.vals,
+      stacked
     );
     const minValsAttrs = getMinValsAttrs(
       pivotData.rowTotals,
-      pivotData.props.vals
+      pivotData.props.vals,
+      stacked
     );
 
     const legendValues = getLegendValues(
@@ -66,7 +69,7 @@ class TableBarchartRenderer extends React.PureComponent {
       return <span className="barChartLabel">{value}</span>;
     }
 
-    function getBarChart(index, width, value, thiskey) {
+    function getBarChart(index, width, value, thiskey, stacked) {
       const minPerc =
         minValsAttrs[thiskey] > 0
           ? 0
@@ -75,7 +78,11 @@ class TableBarchartRenderer extends React.PureComponent {
         width > 0
           ? {width: `${width}%`, marginLeft: `${minPerc}%`}
           : {width: `${width * -1}%`, marginLeft: `${minPerc - width * -1}%`};
-      return (
+      return stacked ? (
+        <div className={`bar bar${index + 1}`} style={chartStyle}>
+          {value}
+        </div>
+      ) : (
         <div className="bar-chart-bar" key={`bar-chart-${index}`}>
           <div className={`bar bar${index + 1}`} style={chartStyle}>
             {value}
@@ -94,14 +101,29 @@ class TableBarchartRenderer extends React.PureComponent {
       const values = keys.map(k => valuesWithKeys[k]);
       return (
         <td className="pvtVal pvtValBarChart" colSpan={steps}>
-          {values.map((value, i) =>
-            getBarChart(
-              i,
-              getPercentageFromValue(value, keys[i]),
-              getBarValue(value),
-              keys[i]
-            )
+          {stacked && (
+            <div className="bar-chart-bar" key={`bar-chart-${i}`}>
+              {values.map((value, i) =>
+                getBarChart(
+                  i,
+                  getPercentageFromValue(value, keys[i]),
+                  getBarValue(value),
+                  keys[i],
+                  stacked
+                )
+              )}
+            </div>
           )}
+          {!stacked &&
+            values.map((value, i) =>
+              getBarChart(
+                i,
+                getPercentageFromValue(value, keys[i]),
+                getBarValue(value),
+                keys[i],
+                stacked
+              )
+            )}
         </td>
       );
     }
