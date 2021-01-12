@@ -7,7 +7,7 @@ import {
   getMinValsAttrs,
   getLegendValues,
 } from './TableBarchartUtils';
-const defaultSteps = 15
+const defaultSteps = 15;
 
 class TableBarchartRenderer extends React.PureComponent {
   constructor() {
@@ -21,19 +21,26 @@ class TableBarchartRenderer extends React.PureComponent {
     const valsAttrs = pivotData.props.vals;
     const multiValue = pivotData.isMultipe;
     const stacked = this.props.stacked;
+    const postprocessfn = this.props.postprocessfn;
     const showBarValues = this.props.showBarValues;
     const showLegend = this.props.showLegend;
     const usePercentages = this.props.usePercentages;
     const steps = this.props.legendSteps || defaultSteps;
+    const minVal = this.props.minVal;
+    const maxVal = this.props.maxVal;
+
+    // Limits based on the passed props or automatically calculated.
     const maxValsAttrs = getMaxValsAttrs(
       pivotData.rowTotals,
       pivotData.props.vals,
-      stacked
+      stacked,
+      maxVal
     );
     const minValsAttrs = getMinValsAttrs(
       pivotData.rowTotals,
       pivotData.props.vals,
-      stacked
+      stacked,
+      minVal
     );
 
     const legendValues = getLegendValues(
@@ -102,7 +109,8 @@ class TableBarchartRenderer extends React.PureComponent {
       if (!multiValue) {
         return <td>Aggregator not supported!</td>;
       }
-      const valuesWithKeys = aggregator.value();
+      const value = aggregator.value();
+      const valuesWithKeys = postprocessfn ? postprocessfn(value) : value;
       const keys = Object.keys(valuesWithKeys);
       const values = keys.map(k => valuesWithKeys[k]);
       return (
