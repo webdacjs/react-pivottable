@@ -1,5 +1,5 @@
 const excludeKeys = ['push', 'value', 'format', 'numInputs'];
-const thousand = 1000
+const thousand = 1000;
 
 function getTotalRowsValsAttr(rowTotals) {
   return Object.keys(rowTotals)
@@ -25,7 +25,13 @@ const getSummed = totalRowsValsAttr =>
   );
 
 // Function to get the maximum value for each one fhe vals (used to calculate the bar widths).
-export function getMaxValsAttrs(rowTotals, vals, stacked) {
+export function getMaxValsAttrs(rowTotals, vals, stacked, minVal) {
+  if (minVal) {
+    return vals.reduce((obj, val) => {
+      obj[val] = minVal;
+      return obj;
+    }, {});
+  }
   const totalRowsValsAttr = getTotalRowsValsAttr(rowTotals);
   if (stacked) {
     const max = Math.max(...getSummed(totalRowsValsAttr));
@@ -51,7 +57,13 @@ export function getMaxValsAttrs(rowTotals, vals, stacked) {
 }
 
 // Function to get the minimum value for each one fhe vals (used to calculate the bar widths).
-export function getMinValsAttrs(rowTotals, vals, stacked) {
+export function getMinValsAttrs(rowTotals, vals, stacked, maxVal) {
+  if (maxVal) {
+    return vals.reduce((obj, val) => {
+      obj[val] = maxVal;
+      return obj;
+    }, {});
+  }
   const totalRowsValsAttr = getTotalRowsValsAttr(rowTotals);
   if (stacked) {
     const min = Math.min(...getSummed(totalRowsValsAttr));
