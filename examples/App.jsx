@@ -1,9 +1,9 @@
 import React from 'react';
-import tips from './budget';
+import tips from './tips';
+import {sortAs} from '../src/Utilities';
 import TableRenderers from '../src/TableRenderers';
 import PivotTableUI from '../src/PivotTableUI';
 import '../src/pivottable.css';
-import '../src/overrides.css';
 import Dropzone from 'react-dropzone';
 import Papa from 'papaparse';
 
@@ -36,17 +36,25 @@ export default class App extends React.Component {
     componentWillMount() {
         this.setState({
             mode: 'demo',
-            filename: 'Tmp Budget',
+            filename: 'Sample Dataset: Tips',
             pivotState: {
                 data: tips,
-                rows: ['school', 'institute', 'unit', 'manager display name', 'category'],
+                rows: ['Payer Gender', 'Day of Week'],
                 cols: [],
                 aggregatorName: 'MultiSum',
-                // vals: ['revised budget', 'expenses', 'commitments', 'available'],
-                vals: ['expenses', 'available'],
-                rendererName: 'Table Barchart',
-                formatter: x => x === 0 || !x ? x : parseFloat(x).toFixed(0),
-                hideRowTotals: true
+                vals: ['Tip', 'Total Bill', 'Party Size'],
+                rendererName: 'Table',
+                formatter: x => parseFloat(x).toFixed(1),
+                hideRowTotals: true,
+                sorters: {
+                    Meal: sortAs(['Lunch', 'Dinner']),
+                    'Day of Week': sortAs([
+                        'Thursday',
+                        'Friday',
+                        'Saturday',
+                        'Sunday',
+                    ]),
+                }
             },
         });
     }
