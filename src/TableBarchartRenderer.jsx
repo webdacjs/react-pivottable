@@ -2,7 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {PivotData} from './Utilities';
 import {getSpanSize} from './TableUtils';
-import {getMaxValsAttrs, getMinValsAttrs} from './TableBarchartUtils';
+import {
+  getMaxValsAttrs,
+  getMinValsAttrs,
+  getLegendValues,
+} from './TableBarchartUtils';
+const defaultSteps = 15
 
 class TableBarchartRenderer extends React.PureComponent {
   constructor() {
@@ -15,15 +20,29 @@ class TableBarchartRenderer extends React.PureComponent {
     const rowAttrs = pivotData.props.rows;
     const valsAttrs = pivotData.props.vals;
     const multiValue = pivotData.isMultipe;
+    const stacked = this.props.stacked;
     const showBarValues = this.props.showBarValues;
+    const showLegend = this.props.showLegend;
+    const usePercentages = this.props.usePercentages;
+    const steps = this.props.legendSteps || defaultSteps;
     const maxValsAttrs = getMaxValsAttrs(
       pivotData.rowTotals,
-      pivotData.props.vals
+      pivotData.props.vals,
+      stacked
     );
     const minValsAttrs = getMinValsAttrs(
       pivotData.rowTotals,
-      pivotData.props.vals
+      pivotData.props.vals,
+      stacked
     );
+
+    const legendValues = getLegendValues(
+      maxValsAttrs,
+      minValsAttrs,
+      steps,
+      usePercentages
+    );
+
     const rowKeys = pivotData.getRowKeys();
 
     const setSelectedRow = rowid => {
@@ -44,14 +63,19 @@ class TableBarchartRenderer extends React.PureComponent {
       return percValue;
     }
 
-    function getBarValue(value) {
+    function getBarValue(value, percentage) {
       if (!showBarValues) {
         return <span className="barChartLabel"></span>;
+      }
+      if (usePercentages) {
+        return (
+          <span className="barChartLabel">{`${percentage.toFixed(1)}%`}</span>
+        );
       }
       return <span className="barChartLabel">{value}</span>;
     }
 
-    function getBarChart(index, width, value, thiskey) {
+    function getBarChart(index, width, value, thiskey, stacked) {
       const minPerc =
         minValsAttrs[thiskey] > 0
           ? 0
@@ -60,7 +84,11 @@ class TableBarchartRenderer extends React.PureComponent {
         width > 0
           ? {width: `${width}%`, marginLeft: `${minPerc}%`}
           : {width: `${width * -1}%`, marginLeft: `${minPerc - width * -1}%`};
-      return (
+      return stacked ? (
+        <div className={`bar bar${index + 1}`} style={chartStyle}>
+          {value}
+        </div>
+      ) : (
         <div className="bar-chart-bar" key={`bar-chart-${index}`}>
           <div className={`bar bar${index + 1}`} style={chartStyle}>
             {value}
@@ -78,15 +106,30 @@ class TableBarchartRenderer extends React.PureComponent {
       const keys = Object.keys(valuesWithKeys);
       const values = keys.map(k => valuesWithKeys[k]);
       return (
-        <td className="pvtVal pvtValBarChart">
-          {values.map((value, i) =>
-            getBarChart(
-              i,
-              getPercentageFromValue(value, keys[i]),
-              getBarValue(value),
-              keys[i]
-            )
+        <td className="pvtVal pvtValBarChart" colSpan={steps}>
+          {stacked && (
+            <div className="bar-chart-bar" key={`bar-chart-${i}`}>
+              {values.map((value, i) =>
+                getBarChart(
+                  i,
+                  getPercentageFromValue(value, keys[i]),
+                  getBarValue(value, getPercentageFromValue(value, keys[i])),
+                  keys[i],
+                  stacked
+                )
+              )}
+            </div>
           )}
+          {!stacked &&
+            values.map((value, i) =>
+              getBarChart(
+                i,
+                getPercentageFromValue(value, keys[i]),
+                getBarValue(value, getPercentageFromValue(value, keys[i])),
+                keys[i],
+                stacked
+              )
+            )}
         </td>
       );
     }
@@ -94,7 +137,7 @@ class TableBarchartRenderer extends React.PureComponent {
     function getTableHeader() {
       return (
         <thead>
-          {rowAttrs.length !== 0 && (
+          {rowAttrs.length !== 0 && [
             <tr>
               {rowAttrs.map(function(r, i) {
                 return (
@@ -104,7 +147,11 @@ class TableBarchartRenderer extends React.PureComponent {
                 );
               })}
               {colAttrs.length === 0 && multiValue && valsAttrs && (
-                <th className="pvtAttrLabel" key="attrKeyJoined">
+                <th
+                  className="pvtAttrLabel"
+                  key="attrKeyJoined"
+                  colSpan={steps}
+                >
                   {valsAttrs.map((x, i) => (
                     <span key={`attHead${i}`} style={{marginRight: '2em'}}>
                       {x}
@@ -112,8 +159,16 @@ class TableBarchartRenderer extends React.PureComponent {
                   ))}
                 </th>
               )}
-            </tr>
-          )}
+            </tr>,
+            <tr style={{display: showLegend ? 'contents' : 'none'}}>
+              <th colSpan={rowAttrs.length}></th>
+              {legendValues.map(val => (
+                <th>
+                  <span className="legendVal">{val}</span>
+                </th>
+              ))}
+            </tr>,
+          ]}
         </thead>
       );
     }

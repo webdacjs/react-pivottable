@@ -1,4 +1,5 @@
 const excludeKeys = ['push', 'value', 'format', 'numInputs'];
+const thousand = 1000
 
 function getTotalRowsValsAttr(rowTotals) {
   return Object.keys(rowTotals)
@@ -10,9 +11,29 @@ function getTotalRowsValsAttr(rowTotals) {
     .flat();
 }
 
+const getAbsoluteMin = minValsAttrs =>
+  Math.min(...Object.keys(minValsAttrs).map(x => minValsAttrs[x]));
+
+const getAbsoluteMax = maxValsAttrs =>
+  Math.max(...Object.keys(maxValsAttrs).map(x => maxValsAttrs[x]));
+
+const getSummed = totalRowsValsAttr =>
+  totalRowsValsAttr.map(x =>
+    Object.keys(x)
+      .map(y => x[y])
+      .reduce((a, b) => a + b, 0)
+  );
+
 // Function to get the maximum value for each one fhe vals (used to calculate the bar widths).
-export function getMaxValsAttrs(rowTotals, vals) {
+export function getMaxValsAttrs(rowTotals, vals, stacked) {
   const totalRowsValsAttr = getTotalRowsValsAttr(rowTotals);
+  if (stacked) {
+    const max = Math.max(...getSummed(totalRowsValsAttr));
+    return vals.reduce((obj, val) => {
+      obj[val] = max;
+      return obj;
+    }, {});
+  }
   const maxValsAttrs = vals.reduce((obj, val) => {
     obj[val] = Math.max(
       ...totalRowsValsAttr
@@ -22,12 +43,23 @@ export function getMaxValsAttrs(rowTotals, vals) {
     );
     return obj;
   }, {});
-  return maxValsAttrs;
+  const absoluteMax = getAbsoluteMax(maxValsAttrs);
+  return vals.reduce((obj, val) => {
+    obj[val] = absoluteMax;
+    return obj;
+  }, {});
 }
 
 // Function to get the minimum value for each one fhe vals (used to calculate the bar widths).
-export function getMinValsAttrs(rowTotals, vals) {
+export function getMinValsAttrs(rowTotals, vals, stacked) {
   const totalRowsValsAttr = getTotalRowsValsAttr(rowTotals);
+  if (stacked) {
+    const min = Math.min(...getSummed(totalRowsValsAttr));
+    return vals.reduce((obj, val) => {
+      obj[val] = min;
+      return obj;
+    }, {});
+  }
   const minValsAttrs = vals.reduce((obj, val) => {
     obj[val] = Math.min(
       ...totalRowsValsAttr
@@ -37,5 +69,31 @@ export function getMinValsAttrs(rowTotals, vals) {
     );
     return obj;
   }, {});
-  return minValsAttrs;
+  const absoluteMin = getAbsoluteMin(minValsAttrs);
+  return vals.reduce((obj, val) => {
+    obj[val] = absoluteMin;
+    return obj;
+  }, {});
+}
+
+function getAdjustedValue(val, usePercentages) {
+  if (usePercentages) {
+    return `${val.toFixed(0)}%`;
+  }
+  return val > thousand ? `${(val / thousand).toFixed(1)}k` : val.toFixed(0);
+}
+
+export function getLegendValues(
+  maxValsAttrs,
+  minValsAttrs,
+  steps,
+  usePercentages
+) {
+  const absoluteMin = usePercentages ? 1 : getAbsoluteMin(minValsAttrs);
+  const absoluteMax = usePercentages ? 100 : getAbsoluteMax(maxValsAttrs);
+  const stepValue = (absoluteMax - absoluteMin) / steps;
+  const legendMarkers = [...Array(steps).keys()].map(x =>
+    getAdjustedValue((x + 1) * stepValue, usePercentages)
+  );
+  return ['', ...legendMarkers.slice(0, -1)];
 }

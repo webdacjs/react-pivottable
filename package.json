@@ -1,6 +1,6 @@
 {
   "name": "react-pivottable",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A React-based pivot table",
   "main": "PivotTableUI.js",
   "files": [
@@ -15,7 +15,7 @@
     "test:jest": "jest",
     "test": "npm run test:eslint && npm run test:prettier && npm run test:jest",
     "clean": "rm -rf lib/ && mkdir lib/",
-    "build": "npm run clean && cp src/pivottable.css lib/ && babel src --out-dir=lib/ --source-maps --presets=env,react --plugins babel-plugin-add-module-exports",
+    "build": "npm run clean && cp src/*.css lib/ && babel src --out-dir=lib/ --source-maps --presets=env,react --plugins babel-plugin-add-module-exports",
     "doPublish": "npm run build && npm publish",
     "postpublish": "npm run clean",
     "deploy": "webpack -p && mv bundle.js examples && cd examples && git init && git add . && git commit -m build && git push --force git@github.com:plotly/react-pivottable.git master:gh-pages && rm -rf .git bundle.js"
@@ -42,8 +42,8 @@
     "sortablejs": "^1.6.1"
   },
   "peerDependencies": {
-    "react": ">=15.0.0",
-    "react-dom": ">=15.0.0"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -60,8 +60,8 @@
     "jest": "^21.2.1",
     "papaparse": "^4.3.6",
     "prettier": "^1.8.2",
-    "react": ">=15.0.0",
-    "react-dom": ">=15.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-dropzone": "^4.2.1",
     "react-hot-loader": "^3.1.1",
     "style-loader": "^0.19.0",
