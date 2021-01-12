@@ -162,10 +162,15 @@ class TableBarchartRenderer extends React.PureComponent {
                   style={{textAlign: 'left'}}
                 >
                   {valsAttrs.map((x, i) => (
-                    <div className="bar-chart-bar-label"><div className={`bar bar${i+1}`} style={{width: '10px'}} />
-                        <span key={`attHead${i}`} style={{marginLeft: '4px'}}>{x}</span>
+                    <div className="bar-chart-bar-label">
+                      <div
+                        className={`bar bar${i + 1}`}
+                        style={{width: '10px'}}
+                      />
+                      <span key={`attHead${i}`} style={{marginLeft: '4px'}}>
+                        {x}
+                      </span>
                     </div>
- 
                   ))}
                 </th>
               )}
