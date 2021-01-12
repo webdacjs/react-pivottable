@@ -2,7 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {PivotData} from './Utilities';
 import {getSpanSize} from './TableUtils';
-import {getMaxValsAttrs, getMinValsAttrs} from './TableBarchartUtils';
+import {
+  getMaxValsAttrs,
+  getMinValsAttrs,
+  getLegendValues,
+} from './TableBarchartUtils';
 
 class TableBarchartRenderer extends React.PureComponent {
   constructor() {
@@ -16,6 +20,9 @@ class TableBarchartRenderer extends React.PureComponent {
     const valsAttrs = pivotData.props.vals;
     const multiValue = pivotData.isMultipe;
     const showBarValues = this.props.showBarValues;
+    const showLegend = this.props.showLegend;
+    const usePercentages = this.props.usePercentages;
+    const steps = this.props.legendSteps || 15;
     const maxValsAttrs = getMaxValsAttrs(
       pivotData.rowTotals,
       pivotData.props.vals
@@ -24,6 +31,9 @@ class TableBarchartRenderer extends React.PureComponent {
       pivotData.rowTotals,
       pivotData.props.vals
     );
+
+    const legendValues = getLegendValues(maxValsAttrs, minValsAttrs, steps);
+
     const rowKeys = pivotData.getRowKeys();
 
     const setSelectedRow = rowid => {
@@ -78,7 +88,7 @@ class TableBarchartRenderer extends React.PureComponent {
       const keys = Object.keys(valuesWithKeys);
       const values = keys.map(k => valuesWithKeys[k]);
       return (
-        <td className="pvtVal pvtValBarChart">
+        <td className="pvtVal pvtValBarChart" colspan={steps}>
           {values.map((value, i) =>
             getBarChart(
               i,
@@ -94,7 +104,7 @@ class TableBarchartRenderer extends React.PureComponent {
     function getTableHeader() {
       return (
         <thead>
-          {rowAttrs.length !== 0 && (
+          {rowAttrs.length !== 0 && [
             <tr>
               {rowAttrs.map(function(r, i) {
                 return (
@@ -104,7 +114,11 @@ class TableBarchartRenderer extends React.PureComponent {
                 );
               })}
               {colAttrs.length === 0 && multiValue && valsAttrs && (
-                <th className="pvtAttrLabel" key="attrKeyJoined">
+                <th
+                  className="pvtAttrLabel"
+                  key="attrKeyJoined"
+                  colspan={steps}
+                >
                   {valsAttrs.map((x, i) => (
                     <span key={`attHead${i}`} style={{marginRight: '2em'}}>
                       {x}
@@ -112,8 +126,16 @@ class TableBarchartRenderer extends React.PureComponent {
                   ))}
                 </th>
               )}
-            </tr>
-          )}
+            </tr>,
+            <tr style={{display: showLegend ? 'block' : 'none'}}>
+              <th colspan={rowAttrs.length}></th>
+              {legendValues.map(val => (
+                <th>
+                  <span className="legendVal">{val}</span>
+                </th>
+              ))}
+            </tr>,
+          ]}
         </thead>
       );
     }
