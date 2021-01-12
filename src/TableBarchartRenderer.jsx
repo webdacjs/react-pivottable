@@ -46,7 +46,7 @@ class TableBarchartRenderer extends React.PureComponent {
 
     function getBarValue(value) {
       if (!showBarValues) {
-        return;
+        return <span className="barChartLabel"></span>;
       }
       return <span className="barChartLabel">{value}</span>;
     }
