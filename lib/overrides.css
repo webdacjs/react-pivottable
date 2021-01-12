@@ -137,6 +137,13 @@ table.pvtTable thead tr:first-child th.pvtAxisLabel {
     height: 15px;
 }
 
+.bar-chart-bar-label {
+    background-color: #fff;
+    min-width: 10%;
+    height: 15px;
+    float: right;
+}
+
 .bar {
     float: left;
     height: 100%;
