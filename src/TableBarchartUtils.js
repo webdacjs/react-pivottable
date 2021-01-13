@@ -90,7 +90,7 @@ export function getMinValsAttrs(rowTotals, vals, stacked, maxVal) {
 
 function getAdjustedValue(val, usePercentages) {
   if (usePercentages) {
-    return `${val.toFixed(0)}%`;
+    return `${Math.ceil(val / 5) * 5}%`;
   }
   return val > thousand ? `${(val / thousand).toFixed(1)}k` : val.toFixed(0);
 }

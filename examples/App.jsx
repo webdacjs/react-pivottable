@@ -46,8 +46,9 @@ export default class App extends React.Component {
                 rendererName: 'Table Barchart',
                 formatter: x => parseFloat(x).toFixed(1),
                 showLegend: true,
-                minVal: 1,
+                minVal: 0,
                 maxVal: 100,
+                legendSteps: 10,
                 postprocessfn: obj => {
                     const tipPerc = (obj['Tip'] / obj['Total Bill']) * 100
                     const totPerc = 100 - tipPerc
