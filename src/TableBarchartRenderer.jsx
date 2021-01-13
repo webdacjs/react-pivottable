@@ -24,6 +24,7 @@ class TableBarchartRenderer extends React.PureComponent {
     const postprocessfn = this.props.postprocessfn;
     const showBarValues = this.props.showBarValues;
     const showLegend = this.props.showLegend;
+    const valsLegend = this.props.valsLegend;
     const usePercentages = this.props.usePercentages;
     const steps = this.props.legendSteps || defaultSteps;
     const minVal = this.props.minVal;
@@ -168,7 +169,7 @@ class TableBarchartRenderer extends React.PureComponent {
                         style={{width: '10px'}}
                       />
                       <span key={`attHead${i}`} style={{marginLeft: '4px'}}>
-                        {x}
+                        {`${valsLegend && valsLegend[i] ? valsLegend[i] : x}`}
                       </span>
                     </div>
                   ))}

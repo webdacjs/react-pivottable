@@ -43,6 +43,7 @@ export default class App extends React.Component {
                 cols: [],
                 aggregatorName: 'MultiSum',
                 vals: ['Tip', 'Total Bill'],
+                valsLegend: ['Tip Replacement Label'],
                 rendererName: 'Table Barchart',
                 formatter: x => parseFloat(x).toFixed(1),
                 showLegend: true,
