@@ -169,3 +169,8 @@ table.pvtTable thead tr:first-child th.pvtAxisLabel {
 .legendVal {
     margin-left: -10px;
 }
+
+.bar-chart-bar-label-span {
+    margin-left: 10px;
+    margin-right: 10px;
+}
