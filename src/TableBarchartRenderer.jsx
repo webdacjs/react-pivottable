@@ -168,7 +168,10 @@ class TableBarchartRenderer extends React.PureComponent {
                         className={`bar bar${i + 1}`}
                         style={{width: '10px'}}
                       />
-                      <span key={`attHead${i}`} className="bar-chart-bar-label-span">
+                      <span
+                        key={`attHead${i}`}
+                        className="bar-chart-bar-label-span"
+                      >
                         {`${valsLegend && valsLegend[i] ? valsLegend[i] : x}`}
                       </span>
                     </div>
