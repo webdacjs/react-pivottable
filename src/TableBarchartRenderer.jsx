@@ -181,11 +181,11 @@ class TableBarchartRenderer extends React.PureComponent {
                   key="attrKeyJoined"
                   colSpan={steps}
                   style={{textAlign: 'left'}}
-                >
+                ><div className="bar-chart-label-wrapper">
                   {valsAttrs.map((x, i) => (
                     <div className="bar-chart-bar-label">
                       <div
-                        className={`bar bar${i + 1}`}
+                        className={getBarClassName(i)}
                         style={{width: '10px'}}
                       />
                       <span
@@ -196,6 +196,7 @@ class TableBarchartRenderer extends React.PureComponent {
                       </span>
                     </div>
                   ))}
+                  </div>
                 </th>
               )}
             </tr>,
