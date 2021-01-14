@@ -181,21 +181,22 @@ class TableBarchartRenderer extends React.PureComponent {
                   key="attrKeyJoined"
                   colSpan={steps}
                   style={{textAlign: 'left'}}
-                ><div className="bar-chart-label-wrapper">
-                  {valsAttrs.map((x, i) => (
-                    <div className="bar-chart-bar-label">
-                      <div
-                        className={getBarClassName(i)}
-                        style={{width: '10px'}}
-                      />
-                      <span
-                        key={`attHead${i}`}
-                        className="bar-chart-bar-label-span"
-                      >
-                        {`${valsLegend && valsLegend[i] ? valsLegend[i] : x}`}
-                      </span>
-                    </div>
-                  ))}
+                >
+                  <div className="bar-chart-label-wrapper">
+                    {valsAttrs.map((x, i) => (
+                      <div className="bar-chart-bar-label">
+                        <div
+                          className={getBarClassName(i)}
+                          style={{width: '10px'}}
+                        />
+                        <span
+                          key={`attHead${i}`}
+                          className="bar-chart-bar-label-span"
+                        >
+                          {`${valsLegend && valsLegend[i] ? valsLegend[i] : x}`}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </th>
               )}

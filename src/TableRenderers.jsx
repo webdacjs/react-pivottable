@@ -21,6 +21,7 @@ function makeRenderer(opts = {}) {
       const pivotData = new PivotData(this.props);
       const colAttrs = pivotData.props.cols;
       const rowAttrs = pivotData.props.rows;
+      const rowsLabels = this.props.rowsLabels;
       const valsAttrs = pivotData.props.vals;
       const multiValue = pivotData.isMultipe;
       const formatter = pivotData.props.formatter;
@@ -185,7 +186,7 @@ function makeRenderer(opts = {}) {
                 {rowAttrs.map(function(r, i) {
                   return (
                     <th className="pvtAxisLabel" key={`rowAttr${i}`}>
-                      {r}
+                      {rowsLabels && rowsLabels[i] ? rowsLabels[i] : r}
                     </th>
                   );
                 })}
