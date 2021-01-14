@@ -40,6 +40,7 @@ export default class App extends React.Component {
             pivotState: {
                 data: tips,
                 rows: ['Payer Gender', 'Day of Week'],
+                rowLabels: [null, 'Day of Week Replacement'],
                 cols: [],
                 aggregatorName: 'MultiSum',
                 vals: ['Tip', 'Total Bill'],
