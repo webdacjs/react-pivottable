@@ -92,7 +92,7 @@ class TableBarchartRenderer extends React.PureComponent {
     }
 
     function getBarValue(value, percentage) {
-      if (!showBarValues) {
+      if (!showBarValues || value === 0) {
         return <span className="barChartLabel"></span>;
       }
       if (usePercentages) {
