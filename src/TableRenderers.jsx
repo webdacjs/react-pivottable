@@ -23,6 +23,7 @@ function makeRenderer(opts = {}) {
       const rowAttrs = pivotData.props.rows;
       const rowsLabels = this.props.rowsLabels;
       const valsAttrs = pivotData.props.vals;
+      const valsLabels = this.props.vals;
       const multiValue = pivotData.isMultipe;
       const formatter = pivotData.props.formatter;
       const hideColTotals = pivotData.props.hideColTotals;
@@ -162,7 +163,11 @@ function makeRenderer(opts = {}) {
                         {colKey[j]}
                         {multiValue &&
                           valsAttrs &&
-                          valsAttrs.map(x => <th>{x}</th>)}
+                          valsAttrs.map((x, i) => (
+                            <th key={`valsAttr${i}`}>
+                              {valsLabels && valsLabels[i] ? valsLabels[i] : x}
+                            </th>
+                          ))}
                       </th>
                     );
                   })}
@@ -195,7 +200,7 @@ function makeRenderer(opts = {}) {
                   valsAttrs &&
                   valsAttrs.map((x, i) => (
                     <th className="pvtAttrLabel" key={`attrKey${i}`}>
-                      {x}
+                      {valsLabels && valsLabels[i] ? valsLabels[i] : x}
                     </th>
                   ))}
                 {!hideRowTotals && (

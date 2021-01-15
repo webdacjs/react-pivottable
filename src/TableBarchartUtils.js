@@ -89,11 +89,13 @@ export function getMinValsAttrs(rowTotals, vals, stacked, maxVal) {
 }
 
 function getAdjustedValue(val, usePercentages) {
-  const nearestFiveVal = Math.ceil(val / 5) * 5
+  const nearestFiveVal = Math.ceil(val / 5) * 5;
   if (usePercentages) {
     return `${nearestFiveVal}%`;
   }
-  return nearestFiveVal > thousand ? `${(nearestFiveVal / thousand).toFixed(1)}k` : nearestFiveVal.toFixed(0);
+  return nearestFiveVal > thousand
+    ? `${(nearestFiveVal / thousand).toFixed(1)}k`
+    : nearestFiveVal.toFixed(0);
 }
 
 export function getLegendValues(
