@@ -2,11 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {PivotData} from './Utilities';
 import {getSpanSize} from './TableUtils';
+import BarChartComponent from './BarChartComponent';
+
 import {
   getMaxValsAttrs,
   getMinValsAttrs,
   getLegendValues,
 } from './TableBarchartUtils';
+
 const defaultSteps = 15;
 
 class TableBarchartRenderer extends React.PureComponent {
@@ -26,6 +29,7 @@ class TableBarchartRenderer extends React.PureComponent {
     const barchartClassNames = this.props.barchartClassNames;
     const showBarValues = this.props.showBarValues;
     const showLegend = this.props.showLegend;
+    const showPopOver = this.props.showPopOver;
     const valsLegend = this.props.valsLegend;
     const usePercentages = this.props.usePercentages;
     const steps = this.props.legendSteps || defaultSteps;
@@ -86,45 +90,6 @@ class TableBarchartRenderer extends React.PureComponent {
       return `bar bar${index + 1}`;
     };
 
-    function getPercentageFromValue(value, key) {
-      const percValue = (value / maxValsAttrs[key]) * 100;
-      return percValue;
-    }
-
-    function getBarValue(value, percentage) {
-      if (!showBarValues || value === 0) {
-        return <span className="barChartLabel"></span>;
-      }
-      if (usePercentages) {
-        return (
-          <span className="barChartLabel">{`${percentage.toFixed(1)}%`}</span>
-        );
-      }
-      return <span className="barChartLabel">{value}</span>;
-    }
-
-    function getBarChart(index, width, value, thiskey, stacked) {
-      const minPerc =
-        minValsAttrs[thiskey] > 0
-          ? 0
-          : getPercentageFromValue(minValsAttrs[thiskey], thiskey) * -1;
-      const chartStyle =
-        width > 0
-          ? {width: `${width}%`, marginLeft: `${minPerc}%`}
-          : {width: `${width * -1}%`, marginLeft: `${minPerc - width * -1}%`};
-      return stacked ? (
-        <div className={getBarClassName(index)} style={chartStyle}>
-          {value}
-        </div>
-      ) : (
-        <div className={getBarWrapperClassName()} key={`bar-chart-${index}`}>
-          <div className={getBarClassName(index)} style={chartStyle}>
-            {value}
-          </div>
-        </div>
-      );
-    }
-
     function getCellValue(i, j, rowKey, colKey) {
       const aggregator = pivotData.getAggregator(rowKey, colKey);
       if (!multiValue) {
@@ -138,27 +103,45 @@ class TableBarchartRenderer extends React.PureComponent {
         <td className="pvtVal pvtValBarChart" colSpan={steps}>
           {stacked && (
             <div className={getBarWrapperClassName()} key={`bar-chart-${i}`}>
-              {values.map((value, i) =>
-                getBarChart(
-                  i,
-                  getPercentageFromValue(value, keys[i]),
-                  getBarValue(value, getPercentageFromValue(value, keys[i])),
-                  keys[i],
-                  stacked
-                )
-              )}
+              {values.map((value, i) => (
+                <BarChartComponent
+                  key={`${i}-${j}`}
+                  index={i}
+                  value={value}
+                  thiskey={keys[i]}
+                  stacked={stacked}
+                  maxValsAttrs={maxValsAttrs}
+                  minValsAttrs={minValsAttrs}
+                  barchartClassNames={minValsAttrs}
+                  showBarValues={showBarValues}
+                  showPopOver={showPopOver}
+                  rowkey={rowKey}
+                  colkey={colKey}
+                  values={values}
+                  valsAttrs={pivotData.props.vals}
+                />
+              ))}
             </div>
           )}
           {!stacked &&
-            values.map((value, i) =>
-              getBarChart(
-                i,
-                getPercentageFromValue(value, keys[i]),
-                getBarValue(value, getPercentageFromValue(value, keys[i])),
-                keys[i],
-                stacked
-              )
-            )}
+            values.map((value, i) => (
+              <BarChartComponent
+                key={`${i}-${j}`}
+                index={i}
+                value={value}
+                thiskey={keys[i]}
+                stacked={stacked}
+                maxValsAttrs={maxValsAttrs}
+                minValsAttrs={minValsAttrs}
+                barchartClassNames={minValsAttrs}
+                showBarValues={showBarValues}
+                showPopOver={showPopOver}
+                rowkey={rowKey}
+                colkey={colKey}
+                values={values}
+                valsAttrs={pivotData.props.vals}
+              />
+            ))}
         </td>
       );
     }
@@ -203,9 +186,11 @@ class TableBarchartRenderer extends React.PureComponent {
             </tr>,
             <tr style={{display: showLegend ? 'contents' : 'none'}}>
               <th className="pvLegendValue" colSpan={rowAttrs.length}></th>
-              {legendValues.map(val => (
-                <th className="pvLegendValue">
-                  <span className="legendVal">{val}</span>
+              {legendValues.map((val, i) => (
+                <th className="pvLegendValue" key={`legend-${i}`}>
+                  <span className="legendVal" key={`legend-val-${i}`}>
+                    {val}
+                  </span>
                 </th>
               ))}
             </tr>,
