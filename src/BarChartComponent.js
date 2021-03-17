@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Popover from 'react-popover';
 
 export default function BarChartComponent({
   index,
@@ -14,17 +15,12 @@ export default function BarChartComponent({
   colkey,
   values,
   valsAttrs,
+  rowAttrs,
 }) {
-  //   console.log({
-  //     value,
-  //     rowkey,
-  //     colkey,
-  //     values,
-  //     valsAttrs,
-  //     showPopOver,
-  //   });
-
+  console.log(showPopOver);
   const [hovered, setHovered] = useState(false);
+  const popOverKeys = [...rowAttrs, ...valsAttrs];
+  const popOverValues = [...rowkey, ...values];
 
   function getPercentageFromValue(value, key) {
     const percValue = (value / maxValsAttrs[key]) * 100;
@@ -92,11 +88,32 @@ export default function BarChartComponent({
     </div>
   );
 
-  const getPopOver = () => console.log('Popover Placeholder');
+  const getPopOver = () => (
+    <div className="popoverBox">
+      <table border="0px">
+        <tbody>
+          {popOverKeys.map((key, i) => (
+            <tr key={`tr-${i}`}>
+              <td width="50%" key={`tdk-${i}`}>
+                <b>{key}</b>:
+              </td>
+              <td width="50%" key={`tdv-${i}`}>
+                {popOverValues[i]}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 
-  return (
+  return showPopOver ? (
+    <Popover isOpen={hovered} preferPlace={'below'} body={getPopOver()}>
+      {stacked && getStackedBar()}
+      {!stacked && getNonStackedBar()}
+    </Popover>
+  ) : (
     <div>
-      {showPopOver && hovered && getPopOver()}
       {stacked && getStackedBar()}
       {!stacked && getNonStackedBar()}
     </div>

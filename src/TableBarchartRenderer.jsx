@@ -119,6 +119,7 @@ class TableBarchartRenderer extends React.PureComponent {
                   colkey={colKey}
                   values={values}
                   valsAttrs={pivotData.props.vals}
+                  rowAttrs={pivotData.props.rows}
                 />
               ))}
             </div>
@@ -140,6 +141,7 @@ class TableBarchartRenderer extends React.PureComponent {
                 colkey={colKey}
                 values={values}
                 valsAttrs={pivotData.props.vals}
+                rowAttrs={pivotData.props.rows}
               />
             ))}
         </td>
