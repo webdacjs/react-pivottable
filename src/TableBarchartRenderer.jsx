@@ -30,6 +30,7 @@ class TableBarchartRenderer extends React.PureComponent {
     const showBarValues = this.props.showBarValues;
     const showLegend = this.props.showLegend;
     const showPopOver = this.props.showPopOver;
+    const popOverFormatter = this.props.popOverFormatter;
     const valsLegend = this.props.valsLegend;
     const usePercentages = this.props.usePercentages;
     const steps = this.props.legendSteps || defaultSteps;
@@ -116,6 +117,7 @@ class TableBarchartRenderer extends React.PureComponent {
                   barchartClassNames={barchartClassNames}
                   showBarValues={showBarValues}
                   showPopOver={showPopOver}
+                  popOverFormatter={popOverFormatter}
                   rowkey={rowKey}
                   originalValues={originalValues}
                   valsAttrs={pivotData.props.vals}
@@ -137,6 +139,7 @@ class TableBarchartRenderer extends React.PureComponent {
                 barchartClassNames={barchartClassNames}
                 showBarValues={showBarValues}
                 showPopOver={showPopOver}
+                popOverFormatter={popOverFormatter}
                 rowkey={rowKey}
                 originalValues={originalValues}
                 valsAttrs={pivotData.props.vals}

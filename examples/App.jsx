@@ -47,6 +47,7 @@ export default class App extends React.Component {
                 valsLegend: ['Tip Replacement Label'],
                 rendererName: 'Table Barchart',
                 formatter: x => parseFloat(x).toFixed(1),
+                popOverFormatter: x => `$ ${parseFloat(x).toFixed(2)}`,
                 showLegend: true,
                 minVal: 0,
                 maxVal: 100,

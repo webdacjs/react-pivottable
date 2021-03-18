@@ -188,3 +188,12 @@ table.pvtTable thead tr:first-child th.pvtAxisLabel {
     padding: 10px;
     width: 240px;
 }
+
+.popOverBox-table {
+    border: 0px;
+}
+
+.popOverBox-table-cell {
+    width: 50%;
+    padding-right: 1em;
+}
