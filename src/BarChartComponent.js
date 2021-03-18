@@ -11,14 +11,18 @@ export default function BarChartComponent({
   barchartClassNames,
   showBarValues,
   showPopOver,
+  popOverFormatter,
   rowkey,
   originalValues,
   valsAttrs,
   rowAttrs,
 }) {
+
+  const formatPopOverValue = val => popOverFormatter ? popOverFormatter(val) : val
+
   const [hovered, setHovered] = useState(false);
   const popOverKeys = [...rowAttrs, ...valsAttrs];
-  const popOverValues = [...rowkey, ...originalValues];
+  const popOverValues = [...rowkey, ...originalValues.map(x => formatPopOverValue(x))];
 
   function getPercentageFromValue(value, key) {
     const percValue = (value / maxValsAttrs[key]) * 100;
@@ -93,15 +97,15 @@ export default function BarChartComponent({
 
   const getPopOver = () => (
     <div className="popoverBox">
-      <table border="0px">
+      <table className='popOverBox-table'>
         <tbody>
           {popOverKeys.map((key, i) => (
             <tr key={`tr-${i}`}>
-              <td width="50%" key={`tdk-${i}`}>
-                <b>{key}</b>:
+              <td className='popOverBox-table-cell' key={`tdk-${i}`}>
+                {key}:
               </td>
-              <td width="50%" key={`tdv-${i}`}>
-                {popOverValues[i]}
+              <td className='popOverBox-table-cell' key={`tdv-${i}`}>
+                <b>{popOverValues[i]}</b>
               </td>
             </tr>
           ))}
