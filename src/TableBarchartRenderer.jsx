@@ -99,6 +99,7 @@ class TableBarchartRenderer extends React.PureComponent {
       const valuesWithKeys = postprocessfn ? postprocessfn(value) : value;
       const keys = Object.keys(valuesWithKeys);
       const values = keys.map(k => valuesWithKeys[k]);
+      const originalValues = keys.map(k => value[k]);
       return (
         <td className="pvtVal pvtValBarChart" colSpan={steps}>
           {stacked && (
@@ -112,12 +113,11 @@ class TableBarchartRenderer extends React.PureComponent {
                   stacked={stacked}
                   maxValsAttrs={maxValsAttrs}
                   minValsAttrs={minValsAttrs}
-                  barchartClassNames={minValsAttrs}
+                  barchartClassNames={barchartClassNames}
                   showBarValues={showBarValues}
                   showPopOver={showPopOver}
                   rowkey={rowKey}
-                  colkey={colKey}
-                  values={values}
+                  originalValues={originalValues}
                   valsAttrs={pivotData.props.vals}
                   rowAttrs={pivotData.props.rows}
                 />
@@ -134,12 +134,11 @@ class TableBarchartRenderer extends React.PureComponent {
                 stacked={stacked}
                 maxValsAttrs={maxValsAttrs}
                 minValsAttrs={minValsAttrs}
-                barchartClassNames={minValsAttrs}
+                barchartClassNames={barchartClassNames}
                 showBarValues={showBarValues}
                 showPopOver={showPopOver}
                 rowkey={rowKey}
-                colkey={colKey}
-                values={values}
+                originalValues={originalValues}
                 valsAttrs={pivotData.props.vals}
                 rowAttrs={pivotData.props.rows}
               />
