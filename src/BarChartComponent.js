@@ -80,7 +80,12 @@ export default function BarChartComponent({
   );
 
   const getNonStackedBar = () => (
-    <div className={getBarWrapperClassName()} key={`bar-chart-${index}`}>
+    <div 
+      className={getBarWrapperClassName()} 
+      key={`bar-chart-${index}`}
+      onMouseOver={() => setHovered(true)}
+      onMouseOut={() => setHovered()}
+    >
       <div className={getBarClassName(index)} style={chartStyle}>
         {barValue}
       </div>
