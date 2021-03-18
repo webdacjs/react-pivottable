@@ -17,7 +17,6 @@ export default function BarChartComponent({
   valsAttrs,
   rowAttrs,
 }) {
-  console.log(showPopOver);
   const [hovered, setHovered] = useState(false);
   const popOverKeys = [...rowAttrs, ...valsAttrs];
   const popOverValues = [...rowkey, ...values];
