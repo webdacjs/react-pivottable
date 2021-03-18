@@ -12,14 +12,13 @@ export default function BarChartComponent({
   showBarValues,
   showPopOver,
   rowkey,
-  colkey,
-  values,
+  originalValues,
   valsAttrs,
   rowAttrs,
 }) {
   const [hovered, setHovered] = useState(false);
   const popOverKeys = [...rowAttrs, ...valsAttrs];
-  const popOverValues = [...rowkey, ...values];
+  const popOverValues = [...rowkey, ...originalValues];
 
   function getPercentageFromValue(value, key) {
     const percValue = (value / maxValsAttrs[key]) * 100;
@@ -80,7 +79,12 @@ export default function BarChartComponent({
   );
 
   const getNonStackedBar = () => (
-    <div className={getBarWrapperClassName()} key={`bar-chart-${index}`}>
+    <div 
+      className={getBarWrapperClassName()} 
+      key={`bar-chart-${index}`}
+      onMouseOver={() => setHovered(true)}
+      onMouseOut={() => setHovered()}
+    >
       <div className={getBarClassName(index)} style={chartStyle}>
         {barValue}
       </div>
@@ -106,15 +110,10 @@ export default function BarChartComponent({
     </div>
   );
 
-  return showPopOver ? (
-    <Popover isOpen={hovered} preferPlace={'below'} body={getPopOver()}>
+  return (
+    <Popover isOpen={showPopOver ? hovered : false} preferPlace={'below'} body={getPopOver()}>
       {stacked && getStackedBar()}
       {!stacked && getNonStackedBar()}
     </Popover>
-  ) : (
-    <div>
-      {stacked && getStackedBar()}
-      {!stacked && getNonStackedBar()}
-    </div>
-  );
+  )
 }

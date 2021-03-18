@@ -47,7 +47,6 @@ export default class App extends React.Component {
                 valsLegend: ['Tip Replacement Label'],
                 rendererName: 'Table Barchart',
                 formatter: x => parseFloat(x).toFixed(1),
-                showPopOver: true,
                 showLegend: true,
                 minVal: 0,
                 maxVal: 100,
@@ -61,6 +60,7 @@ export default class App extends React.Component {
                     }
                 },
                 stacked: true,
+                showPopOver: true,
                 usePercentages: true,
                 hideRowTotals: true,
             },
