@@ -8,6 +8,7 @@ import {
   getMaxValsAttrs,
   getMinValsAttrs,
   getLegendValues,
+  getWrapperWidth,
 } from './TableBarchartUtils';
 
 const defaultSteps = 15;
@@ -42,16 +43,18 @@ class TableBarchartRenderer extends React.PureComponent {
       pivotData.rowTotals,
       pivotData.props.vals,
       stacked,
-      maxVal
+      maxVal,
+      postprocessfn
     );
     const minValsAttrs = getMinValsAttrs(
       pivotData.rowTotals,
       pivotData.props.vals,
       stacked,
-      minVal
+      minVal,
+      postprocessfn
     );
 
-    const legendValues = getLegendValues(
+    const {legendValues, absoluteMax} = getLegendValues(
       maxValsAttrs,
       minValsAttrs,
       steps,
@@ -104,7 +107,11 @@ class TableBarchartRenderer extends React.PureComponent {
       return (
         <td className="pvtVal pvtValBarChart" colSpan={steps}>
           {stacked && (
-            <div className={getBarWrapperClassName()} key={`bar-chart-${i}`}>
+            <div
+              className={getBarWrapperClassName()}
+              key={`bar-chart-${i}`}
+              style={getWrapperWidth(usePercentages, absoluteMax)}
+            >
               {values.map((value, i) => (
                 <BarChartComponent
                   key={`${i}-${j}`}
@@ -119,6 +126,7 @@ class TableBarchartRenderer extends React.PureComponent {
                   showPopOver={showPopOver}
                   popOverFormatter={popOverFormatter}
                   rowkey={rowKey}
+                  usePercentages={usePercentages}
                   originalValues={originalValues}
                   valsAttrs={pivotData.props.vals}
                   rowAttrs={pivotData.props.rows}
@@ -141,6 +149,7 @@ class TableBarchartRenderer extends React.PureComponent {
                 showPopOver={showPopOver}
                 popOverFormatter={popOverFormatter}
                 rowkey={rowKey}
+                usePercentages={usePercentages}
                 originalValues={originalValues}
                 valsAttrs={pivotData.props.vals}
                 rowAttrs={pivotData.props.rows}

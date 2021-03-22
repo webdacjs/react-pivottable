@@ -11,20 +11,29 @@ export default function BarChartComponent({
   barchartClassNames,
   showBarValues,
   showPopOver,
+  usePercentages,
   popOverFormatter,
   rowkey,
   originalValues,
   valsAttrs,
   rowAttrs,
 }) {
-
-  const formatPopOverValue = val => popOverFormatter ? popOverFormatter(val) : val
+  const formatPopOverValue = val =>
+    popOverFormatter ? popOverFormatter(val) : val;
 
   const [hovered, setHovered] = useState(false);
   const popOverKeys = [...rowAttrs, ...valsAttrs];
-  const popOverValues = [...rowkey, ...originalValues.map(x => formatPopOverValue(x))];
+  const popOverValues = [
+    ...rowkey,
+    ...originalValues.map(x => formatPopOverValue(x)),
+  ];
 
   function getPercentageFromValue(value, key) {
+    // If using % the values should be in the % range
+    if (usePercentages) {
+      return (value / 100) * 100;
+    }
+    // Other the % is calculated based on the maximum value obtained.
     const percValue = (value / maxValsAttrs[key]) * 100;
     return percValue;
   }
@@ -83,8 +92,8 @@ export default function BarChartComponent({
   );
 
   const getNonStackedBar = () => (
-    <div 
-      className={getBarWrapperClassName()} 
+    <div
+      className={getBarWrapperClassName()}
       key={`bar-chart-${index}`}
       onMouseOver={() => setHovered(true)}
       onMouseOut={() => setHovered()}
@@ -97,14 +106,14 @@ export default function BarChartComponent({
 
   const getPopOver = () => (
     <div className="popoverBox">
-      <table className='popOverBox-table'>
+      <table className="popOverBox-table">
         <tbody>
           {popOverKeys.map((key, i) => (
             <tr key={`tr-${i}`}>
-              <td className='popOverBox-table-cell' key={`tdk-${i}`}>
+              <td className="popOverBox-table-cell" key={`tdk-${i}`}>
                 {key}:
               </td>
-              <td className='popOverBox-table-cell' key={`tdv-${i}`}>
+              <td className="popOverBox-table-cell" key={`tdv-${i}`}>
                 <b>{popOverValues[i]}</b>
               </td>
             </tr>
@@ -115,9 +124,13 @@ export default function BarChartComponent({
   );
 
   return (
-    <Popover isOpen={showPopOver ? hovered : false} preferPlace={'below'} body={getPopOver()}>
+    <Popover
+      isOpen={showPopOver ? hovered : false}
+      preferPlace={'below'}
+      body={getPopOver()}
+    >
       {stacked && getStackedBar()}
       {!stacked && getNonStackedBar()}
     </Popover>
-  )
+  );
 }
