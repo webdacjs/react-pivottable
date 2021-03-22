@@ -20,7 +20,6 @@ export function getAbsoluteMax(maxValsAttrs) {
 }
 
 const getSummed = (totalRowsValsAttr, postprocessfn) => {
-  console.log(totalRowsValsAttr);
   if (postprocessfn) {
     const totalRowsValsProcessed = totalRowsValsAttr.map(x => postprocessfn(x));
     return totalRowsValsProcessed.map(x =>
