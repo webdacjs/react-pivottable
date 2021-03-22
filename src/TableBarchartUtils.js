@@ -153,6 +153,5 @@ export function getWrapperWidth(usePercentages, absoluteMax) {
   if (absoluteMax <= 100) {
     return;
   }
-  const extra = absoluteMax - 100;
-  return {width: `${100 - extra}%`};
+  return { width: ((850 / absoluteMax) * 10) + '%' };
 }
