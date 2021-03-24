@@ -165,7 +165,7 @@ export function getWrapperWidth(usePercentages, absoluteMax) {
   if (absoluteMax <= 100) {
     return;
   }
-  return {width: (850 / absoluteMax) * 10 + '%'};
+  return { width: 1000 / absoluteMax * 10 + '%' };
 }
 
 export function getGaugedWrapperWidth(value, restValuesSum, absoluteMax) {
