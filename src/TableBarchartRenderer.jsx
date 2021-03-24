@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import {PivotData} from './Utilities';
 import {getSpanSize} from './TableUtils';
 import BarChartComponent from './BarChartComponent';
+import BarChartWrapperComponent from './BarChartWrapperComponent';
 
 import {
   getMaxValsAttrs,
   getMinValsAttrs,
   getLegendValues,
-  getWrapperWidth,
+  getBarClassName,
 } from './TableBarchartUtils';
 
 const defaultSteps = 15;
@@ -26,6 +27,7 @@ class TableBarchartRenderer extends React.PureComponent {
     const valsAttrs = pivotData.props.vals;
     const multiValue = pivotData.isMultipe;
     const stacked = this.props.stacked;
+    const gauged = this.props.gauged;
     const postprocessfn = this.props.postprocessfn;
     const barchartClassNames = this.props.barchartClassNames;
     const showBarValues = this.props.showBarValues;
@@ -46,6 +48,7 @@ class TableBarchartRenderer extends React.PureComponent {
       maxVal,
       postprocessfn
     );
+
     const minValsAttrs = getMinValsAttrs(
       pivotData.rowTotals,
       pivotData.props.vals,
@@ -76,24 +79,6 @@ class TableBarchartRenderer extends React.PureComponent {
       return null;
     };
 
-    const getBarWrapperClassName = () => {
-      if (barchartClassNames && barchartClassNames.wrapper) {
-        return barchartClassNames.wrapper;
-      }
-      return 'bar-chart-bar';
-    };
-
-    const getBarClassName = index => {
-      if (
-        barchartClassNames &&
-        barchartClassNames.bars &&
-        barchartClassNames.bars[index]
-      ) {
-        return barchartClassNames.bars[index];
-      }
-      return `bar bar${index + 1}`;
-    };
-
     function getCellValue(i, j, rowKey, colKey) {
       const aggregator = pivotData.getAggregator(rowKey, colKey);
       if (!multiValue) {
@@ -106,19 +91,25 @@ class TableBarchartRenderer extends React.PureComponent {
       const originalValues = keys.map(k => value[k]);
       return (
         <td className="pvtVal pvtValBarChart" colSpan={steps}>
-          {stacked && (
-            <div
-              className={getBarWrapperClassName()}
-              key={`bar-chart-${i}`}
-              style={getWrapperWidth(usePercentages, absoluteMax)}
+          {/* Stacked Bars Case */}
+          {(stacked || gauged) && (
+            <BarChartWrapperComponent
+              key={`wrapper-${i}-${j}`}
+              index={i}
+              barchartClassNames={barchartClassNames}
+              usePercentages={usePercentages}
+              absoluteMax={absoluteMax}
+              stacked={stacked}
+              gauged={gauged}
             >
               {values.map((value, i) => (
                 <BarChartComponent
-                  key={`${i}-${j}`}
+                  key={`barcharcomponent-${i}-${j}`}
                   index={i}
                   value={value}
                   thiskey={keys[i]}
                   stacked={stacked}
+                  gauged={gauged}
                   maxValsAttrs={maxValsAttrs}
                   minValsAttrs={minValsAttrs}
                   barchartClassNames={barchartClassNames}
@@ -132,9 +123,11 @@ class TableBarchartRenderer extends React.PureComponent {
                   rowAttrs={pivotData.props.rows}
                 />
               ))}
-            </div>
+            </BarChartWrapperComponent>
           )}
+          {/* Non-Stacked, Non-Gauged Bars Case */}
           {!stacked &&
+            !gauged &&
             values.map((value, i) => (
               <BarChartComponent
                 key={`${i}-${j}`}
@@ -200,7 +193,11 @@ class TableBarchartRenderer extends React.PureComponent {
             <tr style={{display: showLegend ? 'contents' : 'none'}}>
               <th className="pvLegendValue" colSpan={rowAttrs.length}></th>
               {legendValues.map((val, i) => (
-                <th className="pvLegendValue" key={`legend-${i}`}>
+                <th
+                  className={`pvLegendValue`}
+                  style={{width: `${100 / legendValues.length}%`}}
+                  key={`legend-${i}`}
+                >
                   <span className="legendVal" key={`legend-val-${i}`}>
                     {val}
                   </span>
