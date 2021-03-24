@@ -31,7 +31,7 @@ class PivotTableUISmartWrapper extends React.PureComponent {
                     showLegend={true}
                     showPopOver={true}
                 />
-                <h3>2. Pivot with Barchart (actual values) + popover</h3>
+                <h3>2. Pivot with Barchart (actual values) + popover + legend Formatter</h3>
                 <PivotTable
                     key='absoluteValuesPopover'
                     data={tips}
@@ -42,6 +42,7 @@ class PivotTableUISmartWrapper extends React.PureComponent {
                     vals={['Tip', 'Total Bill']}
                     valsLegend={['Tip Replacement Label']}
                     rendererName={'Table Barchart'}
+                    legendFormatter={x => Math.round(x)}
                     formatter={x => parseFloat(x).toFixed(1)}
                     popOverFormatter={x => `$ ${parseFloat(x).toFixed(2)}`}
                     showLegend={true}

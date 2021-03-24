@@ -34,6 +34,7 @@ class TableBarchartRenderer extends React.PureComponent {
     const showLegend = this.props.showLegend;
     const showPopOver = this.props.showPopOver;
     const popOverFormatter = this.props.popOverFormatter;
+    const legendFormatter = this.props.legendFormatter;
     const valsLegend = this.props.valsLegend;
     const usePercentages = this.props.usePercentages;
     const steps = this.props.legendSteps || defaultSteps;
@@ -61,7 +62,8 @@ class TableBarchartRenderer extends React.PureComponent {
       maxValsAttrs,
       minValsAttrs,
       steps,
-      usePercentages
+      usePercentages,
+      legendFormatter
     );
 
     const rowKeys = pivotData.getRowKeys();

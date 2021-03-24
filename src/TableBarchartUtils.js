@@ -121,7 +121,10 @@ export function getMinValsAttrs(
   }, {});
 }
 
-function getAdjustedValue(val, usePercentages) {
+function getAdjustedValue(val, usePercentages, legendFormatter) {
+  if (legendFormatter) {
+    return legendFormatter(val);
+  }
   const nearestFiveVal = Math.ceil(val / 5) * 5;
   if (usePercentages) {
     return `${nearestFiveVal}%`;
@@ -135,7 +138,8 @@ export function getLegendValues(
   maxValsAttrs,
   minValsAttrs,
   steps,
-  usePercentages
+  usePercentages,
+  legendFormatter
 ) {
   const absoluteMin = getAbsoluteMin(minValsAttrs);
   const absoluteMax = getAbsoluteMax(maxValsAttrs);
@@ -146,7 +150,7 @@ export function getLegendValues(
   const stepValue = (absoluteMax - realAbsoluteMin) / steps;
 
   const legendMarkers = [...Array(steps).keys()].map(x =>
-    getAdjustedValue((x + 1) * stepValue, usePercentages)
+    getAdjustedValue((x + 1) * stepValue, usePercentages, legendFormatter)
   );
   // Not showing the first and last element from the legend values.
   return {
@@ -165,7 +169,7 @@ export function getWrapperWidth(usePercentages, absoluteMax) {
   if (absoluteMax <= 100) {
     return;
   }
-  return {width: (850 / absoluteMax) * 10 + '%'};
+  return {width: (1000 / absoluteMax) * 10 + '%'};
 }
 
 export function getGaugedWrapperWidth(value, restValuesSum, absoluteMax) {
