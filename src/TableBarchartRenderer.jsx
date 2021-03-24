@@ -91,6 +91,7 @@ class TableBarchartRenderer extends React.PureComponent {
       const originalValues = keys.map(k => value[k]);
       return (
         <td className="pvtVal pvtValBarChart" colSpan={steps}>
+          {/* Stacked Bars Case */}
           {stacked && !gauged && (
             <BarChartWrapperComponent
               key={`wrapper-${i}-${j}`}
@@ -123,6 +124,41 @@ class TableBarchartRenderer extends React.PureComponent {
               ))}
             </BarChartWrapperComponent>
           )}
+          {/* Non-Stacked, Gauged Bars Case */}
+          {!stacked && gauged && (
+            <BarChartWrapperComponent
+              key={`wrapper-${i}-${j}`}
+              index={i}
+              barchartClassNames={barchartClassNames}
+              usePercentages={usePercentages}
+              absoluteMax={absoluteMax}
+              stacked={stacked}
+              gauged={gauged}
+              values={values}
+            >
+              {values.slice(1,1000).map((value, i) => (
+                <BarChartComponent
+                  key={`barcharcomponent-${i}-${j}`}
+                  index={i}
+                  value={value}
+                  thiskey={keys[i]}
+                  stacked={stacked}
+                  maxValsAttrs={maxValsAttrs}
+                  minValsAttrs={minValsAttrs}
+                  barchartClassNames={barchartClassNames}
+                  showBarValues={showBarValues}
+                  showPopOver={showPopOver}
+                  popOverFormatter={popOverFormatter}
+                  rowkey={rowKey}
+                  usePercentages={usePercentages}
+                  originalValues={originalValues}
+                  valsAttrs={pivotData.props.vals}
+                  rowAttrs={pivotData.props.rows}
+                />
+              ))}
+            </BarChartWrapperComponent>
+          )}
+          {/* Non-Stacked, Non-Gauged Bars Case */}
           {!stacked &&
             !gauged &&
             values.map((value, i) => (
@@ -190,7 +226,7 @@ class TableBarchartRenderer extends React.PureComponent {
             <tr style={{display: showLegend ? 'contents' : 'none'}}>
               <th className="pvLegendValue" colSpan={rowAttrs.length}></th>
               {legendValues.map((val, i) => (
-                <th className="pvLegendValue" key={`legend-${i}`}>
+                <th className={`pvLegendValue`} style={{width: `${100 / legendValues.length}%`}} key={`legend-${i}`}>
                   <span className="legendVal" key={`legend-val-${i}`}>
                     {val}
                   </span>
