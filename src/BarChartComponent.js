@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
 import Popover from 'react-popover';
+import {
+  getBarClassName,
+  getBarValue,
+  getChartStyle,
+  getBarWrapperClassName,
+} from './TableBarchartUtils';
 
 export default function BarChartComponent({
   index,
@@ -28,78 +34,47 @@ export default function BarChartComponent({
     ...originalValues.map(x => formatPopOverValue(x)),
   ];
 
-  function getPercentageFromValue(value, key) {
-    // If using % the values should be in the % range
-    if (usePercentages) {
-      return (value / 100) * 100;
-    }
-    // Other the % is calculated based on the maximum value obtained.
-    const percValue = (value / maxValsAttrs[key]) * 100;
-    return percValue;
-  }
-
-  function getBarValue(value, percentage) {
-    if (!showBarValues || value === 0) {
-      return <span className="barChartLabel"></span>;
-    }
-    if (usePercentages) {
-      return (
-        <span className="barChartLabel">{`${percentage.toFixed(1)}%`}</span>
-      );
-    }
-    return <span className="barChartLabel">{value}</span>;
-  }
-
-  const getBarWrapperClassName = () => {
-    if (barchartClassNames && barchartClassNames.wrapper) {
-      return barchartClassNames.wrapper;
-    }
-    return 'bar-chart-bar';
-  };
-
-  const getBarClassName = index => {
-    if (
-      barchartClassNames &&
-      barchartClassNames.bars &&
-      barchartClassNames.bars[index]
-    ) {
-      return barchartClassNames.bars[index];
-    }
-    return `bar bar${index + 1}`;
-  };
-
-  const width = getPercentageFromValue(value, thiskey);
-  const barValue = getBarValue(value, getPercentageFromValue(value, thiskey));
-
-  const minPerc =
-    minValsAttrs[thiskey] > 0
-      ? 0
-      : getPercentageFromValue(minValsAttrs[thiskey], thiskey) * -1;
-  const chartStyle =
-    width > 0
-      ? {width: `${width}%`, marginLeft: `${minPerc}%`}
-      : {width: `${width * -1}%`, marginLeft: `${minPerc - width * -1}%`};
-
   const getStackedBar = () => (
     <div
-      className={getBarClassName(index)}
-      style={chartStyle}
+      className={getBarClassName(index, barchartClassNames)}
+      style={getChartStyle(
+        value,
+        thiskey,
+        maxValsAttrs,
+        minValsAttrs,
+        usePercentages
+      )}
       onMouseOver={() => setHovered(true)}
       onMouseOut={() => setHovered()}
     >
-      {barValue}
+      {getBarValue(value, thiskey, maxValsAttrs, showBarValues, usePercentages)}
     </div>
   );
 
   const getNonStackedBar = () => (
     <div
-      className={getBarWrapperClassName()}
+      className={getBarWrapperClassName(barchartClassNames)}
       key={`bar-chart-${index}`}
       onMouseOver={() => setHovered(true)}
       onMouseOut={() => setHovered()}
     >
-      <div className={getBarClassName(index)} style={chartStyle}>
-        {barValue}
+      <div
+        className={getBarClassName(index, barchartClassNames)}
+        style={getChartStyle(
+          value,
+          thiskey,
+          maxValsAttrs,
+          minValsAttrs,
+          usePercentages
+        )}
+      >
+        {getBarValue(
+          value,
+          thiskey,
+          maxValsAttrs,
+          showBarValues,
+          usePercentages
+        )}
       </div>
     </div>
   );

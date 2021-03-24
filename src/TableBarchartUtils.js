@@ -1,3 +1,5 @@
+import React from 'react';
+
 const excludeKeys = ['push', 'value', 'format', 'numInputs'];
 const thousand = 1000;
 
@@ -146,6 +148,8 @@ export function getLegendValues(
   };
 }
 
+// This function helps to adjust the wrapper width in case there is
+// a % overflow (ie. the max value = 240%)
 export function getWrapperWidth(usePercentages, absoluteMax) {
   if (!usePercentages) {
     return;
@@ -154,4 +158,88 @@ export function getWrapperWidth(usePercentages, absoluteMax) {
     return;
   }
   return {width: (850 / absoluteMax) * 10 + '%'};
+}
+
+export function getBarClassName(index, barchartClassNames) {
+  if (
+    barchartClassNames &&
+    barchartClassNames.bars &&
+    barchartClassNames.bars[index]
+  ) {
+    return barchartClassNames.bars[index];
+  }
+  return `bar bar${index + 1}`;
+}
+
+export function getPercentageFromValue(
+  value,
+  key,
+  maxValsAttrs,
+  usePercentages
+) {
+  // If using % the values should be in the % range
+  if (usePercentages) {
+    return (value / 100) * 100;
+  }
+  // Other the % is calculated based on the maximum value obtained.
+  const percValue = (value / maxValsAttrs[key]) * 100;
+  return percValue;
+}
+
+export function getBarValue(
+  value,
+  thiskey,
+  maxValsAttrs,
+  showBarValues,
+  usePercentages
+) {
+  if (!showBarValues || value === 0) {
+    return <span className="barChartLabel"></span>;
+  }
+  if (usePercentages) {
+    const percentage = getPercentageFromValue(
+      value,
+      thiskey,
+      maxValsAttrs,
+      usePercentages
+    );
+    return <span className="barChartLabel">{`${percentage.toFixed(1)}%`}</span>;
+  }
+  return <span className="barChartLabel">{value}</span>;
+}
+
+export function getChartStyle(
+  value,
+  thiskey,
+  maxValsAttrs,
+  minValsAttrs,
+  usePercentages
+) {
+  const width = getPercentageFromValue(
+    value,
+    thiskey,
+    maxValsAttrs,
+    usePercentages
+  );
+  const minPerc =
+    minValsAttrs[thiskey] > 0
+      ? 0
+      : getPercentageFromValue(
+          minValsAttrs[thiskey],
+          thiskey,
+          maxValsAttrs,
+          usePercentages
+        ) * -1;
+  const chartStyle =
+    width > 0
+      ? {width: `${width}%`, marginLeft: `${minPerc}%`}
+      : {width: `${width * -1}%`, marginLeft: `${minPerc - width * -1}%`};
+  return chartStyle;
+}
+
+export function getBarWrapperClassName(barchartClassNames) {
+  if (barchartClassNames && barchartClassNames.wrapper) {
+    return barchartClassNames.wrapper;
+  }
+  return 'bar-chart-bar';
 }
