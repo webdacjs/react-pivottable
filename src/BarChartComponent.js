@@ -12,6 +12,7 @@ export default function BarChartComponent({
   value,
   thiskey,
   stacked,
+  gauged,
   maxValsAttrs,
   minValsAttrs,
   barchartClassNames,
@@ -33,6 +34,24 @@ export default function BarChartComponent({
     ...rowkey,
     ...originalValues.map(x => formatPopOverValue(x)),
   ];
+
+  const getGaugedBar = () => (
+    <div
+      className={getBarClassName(index, barchartClassNames)}
+      style={getChartStyle(
+        value,
+        thiskey,
+        maxValsAttrs,
+        minValsAttrs,
+        usePercentages,
+        gauged
+      )}
+      onMouseOver={() => setHovered(true)}
+      onMouseOut={() => setHovered()}
+    >
+      {getBarValue(value, thiskey, maxValsAttrs, showBarValues, usePercentages)}
+    </div>
+  );
 
   const getStackedBar = () => (
     <div
@@ -104,8 +123,9 @@ export default function BarChartComponent({
       preferPlace={'below'}
       body={getPopOver()}
     >
-      {stacked && getStackedBar()}
-      {!stacked && getNonStackedBar()}
+      {!stacked && gauged && getGaugedBar()}
+      {stacked && !gauged && getStackedBar()}
+      {!stacked && !gauged && getNonStackedBar()}
     </Popover>
   );
 }

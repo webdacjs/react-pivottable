@@ -12,8 +12,7 @@ export default function BarChartWapperComponent({
   children,
   values,
 }) {
-
-  const sumReducer = array => array.reduce((a, b) => a + b, 0)
+  const sumReducer = array => array.reduce((a, b) => a + b, 0);
 
   const getBarWrapperClassName = () => {
     if (barchartClassNames && barchartClassNames.wrapper) {
@@ -36,14 +35,16 @@ export default function BarChartWapperComponent({
     <div
       className={getBarWrapperClassName()}
       key={`bar-chart-${Math.random()}`}
-      style={getGaugedWrapperWidth(values[0], sumReducer(values.slice(1,1000)), absoluteMax)}
+      style={getWrapperWidth(usePercentages, absoluteMax)}
     >
       {children}
     </div>
   );
 
-  return <span>
-    {stacked && !gauged && getStackedWrapper()}
-    {!stacked && gauged && getGaugedWrapper()}
-  </span>;
+  return (
+    <span>
+      {stacked && !gauged && getStackedWrapper()}
+      {!stacked && gauged && getGaugedWrapper()}
+    </span>
+  );
 }

@@ -3,12 +3,11 @@ import React from 'react';
 const excludeKeys = ['push', 'value', 'format', 'numInputs'];
 const thousand = 1000;
 
-
-function roundToCeil (val) {
-  const rounded = Math.round(val)
-  const powVal = String(rounded).length > 3 ?  String(rounded).length - 2 : 1
-  const multiple = Math.pow(10, powVal)
- return Math.ceil(val / multiple) * multiple;
+function roundToCeil(val) {
+  const rounded = Math.round(val);
+  const powVal = String(rounded).length > 3 ? String(rounded).length - 2 : 1;
+  const multiple = Math.pow(10, powVal);
+  return Math.ceil(val / multiple) * multiple;
 }
 
 function getTotalRowsValsAttr(rowTotals) {
@@ -77,7 +76,6 @@ export function getMaxValsAttrs(
     return obj;
   }, {});
   const absoluteMax = roundToCeil(getAbsoluteMax(maxValsAttrs));
-  console.log({absoluteMax})
   return vals.reduce((obj, val) => {
     obj[val] = absoluteMax;
     return obj;
@@ -116,7 +114,7 @@ export function getMinValsAttrs(
     return obj;
   }, {});
   const absoluteMin = getAbsoluteMin(minValsAttrs);
-  
+
   return vals.reduce((obj, val) => {
     obj[val] = absoluteMin;
     return obj;
@@ -141,7 +139,6 @@ export function getLegendValues(
 ) {
   const absoluteMin = getAbsoluteMin(minValsAttrs);
   const absoluteMax = getAbsoluteMax(maxValsAttrs);
-  
 
   // Dealing with % cases and post process function
   // where the min === max.
@@ -171,9 +168,9 @@ export function getWrapperWidth(usePercentages, absoluteMax) {
   return {width: (850 / absoluteMax) * 10 + '%'};
 }
 
-export function getGaugedWrapperWidth (value, restValuesSum, absoluteMax) {
-  const ajustedValue = value //n- restValuesSum
-  return { width: `${(ajustedValue * 100) / absoluteMax}%` }
+export function getGaugedWrapperWidth(value, restValuesSum, absoluteMax) {
+  const ajustedValue = value; //n- restValuesSum
+  return {width: `${(ajustedValue * 100) / absoluteMax}%`};
 }
 
 export function getBarClassName(index, barchartClassNames) {
@@ -229,7 +226,8 @@ export function getChartStyle(
   thiskey,
   maxValsAttrs,
   minValsAttrs,
-  usePercentages
+  usePercentages,
+  gauged
 ) {
   const width = getPercentageFromValue(
     value,
@@ -250,6 +248,10 @@ export function getChartStyle(
     width > 0
       ? {width: `${width}%`, marginLeft: `${minPerc}%`}
       : {width: `${width * -1}%`, marginLeft: `${minPerc - width * -1}%`};
+  if (gauged) {
+    const {width, marginLeft} = chartStyle;
+    return {width, marginLeft, position: 'absolute'};
+  }
   return chartStyle;
 }
 
