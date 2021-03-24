@@ -10,7 +10,6 @@ import {
   getMinValsAttrs,
   getLegendValues,
   getBarClassName,
-  getWrapperWidth,
 } from './TableBarchartUtils';
 
 const defaultSteps = 15;
@@ -49,6 +48,7 @@ class TableBarchartRenderer extends React.PureComponent {
       maxVal,
       postprocessfn
     );
+    
     const minValsAttrs = getMinValsAttrs(
       pivotData.rowTotals,
       pivotData.props.vals,
