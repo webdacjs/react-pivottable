@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import {PivotData} from './Utilities';
 import {getSpanSize} from './TableUtils';
 import BarChartComponent from './BarChartComponent';
+import BarChartWrapperComponent from './BarChartWrapperComponent';
 
 import {
   getMaxValsAttrs,
   getMinValsAttrs,
   getLegendValues,
+  getBarClassName,
   getWrapperWidth,
 } from './TableBarchartUtils';
 
@@ -26,6 +28,7 @@ class TableBarchartRenderer extends React.PureComponent {
     const valsAttrs = pivotData.props.vals;
     const multiValue = pivotData.isMultipe;
     const stacked = this.props.stacked;
+    const gauged = this.props.gauged;
     const postprocessfn = this.props.postprocessfn;
     const barchartClassNames = this.props.barchartClassNames;
     const showBarValues = this.props.showBarValues;
@@ -76,24 +79,6 @@ class TableBarchartRenderer extends React.PureComponent {
       return null;
     };
 
-    const getBarWrapperClassName = () => {
-      if (barchartClassNames && barchartClassNames.wrapper) {
-        return barchartClassNames.wrapper;
-      }
-      return 'bar-chart-bar';
-    };
-
-    const getBarClassName = index => {
-      if (
-        barchartClassNames &&
-        barchartClassNames.bars &&
-        barchartClassNames.bars[index]
-      ) {
-        return barchartClassNames.bars[index];
-      }
-      return `bar bar${index + 1}`;
-    };
-
     function getCellValue(i, j, rowKey, colKey) {
       const aggregator = pivotData.getAggregator(rowKey, colKey);
       if (!multiValue) {
@@ -104,17 +89,22 @@ class TableBarchartRenderer extends React.PureComponent {
       const keys = Object.keys(valuesWithKeys);
       const values = keys.map(k => valuesWithKeys[k]);
       const originalValues = keys.map(k => value[k]);
+      console.log({values, valuesWithKeys})
       return (
         <td className="pvtVal pvtValBarChart" colSpan={steps}>
-          {stacked && (
-            <div
-              className={getBarWrapperClassName()}
-              key={`bar-chart-${i}`}
-              style={getWrapperWidth(usePercentages, absoluteMax)}
+          {stacked && !gauged && (
+            <BarChartWrapperComponent
+              key={`wrapper-${i}-${j}`}
+              index={i}
+              barchartClassNames={barchartClassNames}
+              usePercentages={usePercentages}
+              absoluteMax={absoluteMax}
+              stacked={stacked}
+              gauged={gauged}
             >
               {values.map((value, i) => (
                 <BarChartComponent
-                  key={`${i}-${j}`}
+                  key={`barcharcomponent-${i}-${j}`}
                   index={i}
                   value={value}
                   thiskey={keys[i]}
@@ -132,9 +122,10 @@ class TableBarchartRenderer extends React.PureComponent {
                   rowAttrs={pivotData.props.rows}
                 />
               ))}
-            </div>
+            </BarChartWrapperComponent>
           )}
           {!stacked &&
+            !gauged &&
             values.map((value, i) => (
               <BarChartComponent
                 key={`${i}-${j}`}
