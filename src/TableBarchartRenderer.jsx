@@ -89,7 +89,6 @@ class TableBarchartRenderer extends React.PureComponent {
       const keys = Object.keys(valuesWithKeys);
       const values = keys.map(k => valuesWithKeys[k]);
       const originalValues = keys.map(k => value[k]);
-      console.log({values, valuesWithKeys})
       return (
         <td className="pvtVal pvtValBarChart" colSpan={steps}>
           {stacked && !gauged && (
