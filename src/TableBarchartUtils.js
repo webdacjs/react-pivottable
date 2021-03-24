@@ -3,6 +3,14 @@ import React from 'react';
 const excludeKeys = ['push', 'value', 'format', 'numInputs'];
 const thousand = 1000;
 
+
+function roundToCeil (val) {
+  const rounded = Math.round(val)
+  const powVal = String(rounded).length > 3 ?  String(rounded).length - 2 : 1
+  const multiple = Math.pow(10, powVal)
+ return Math.ceil(val / multiple) * multiple;
+}
+
 function getTotalRowsValsAttr(rowTotals) {
   return Object.keys(rowTotals)
     .map(row =>
@@ -68,7 +76,8 @@ export function getMaxValsAttrs(
     );
     return obj;
   }, {});
-  const absoluteMax = getAbsoluteMax(maxValsAttrs);
+  const absoluteMax = roundToCeil(getAbsoluteMax(maxValsAttrs));
+  console.log({absoluteMax})
   return vals.reduce((obj, val) => {
     obj[val] = absoluteMax;
     return obj;
@@ -107,6 +116,7 @@ export function getMinValsAttrs(
     return obj;
   }, {});
   const absoluteMin = getAbsoluteMin(minValsAttrs);
+  
   return vals.reduce((obj, val) => {
     obj[val] = absoluteMin;
     return obj;
@@ -119,7 +129,7 @@ function getAdjustedValue(val, usePercentages) {
     return `${nearestFiveVal}%`;
   }
   return nearestFiveVal > thousand
-    ? `${(nearestFiveVal / thousand).toFixed(1)}k`
+    ? `${(nearestFiveVal / thousand).toFixed(2)}k`
     : nearestFiveVal.toFixed(0);
 }
 
@@ -131,10 +141,11 @@ export function getLegendValues(
 ) {
   const absoluteMin = getAbsoluteMin(minValsAttrs);
   const absoluteMax = getAbsoluteMax(maxValsAttrs);
+  
 
   // Dealing with % cases and post process function
   // where the min === max.
-  const realAbsoluteMin = usePercentages ? 0 : absoluteMin;
+  const realAbsoluteMin = usePercentages || absoluteMin > 0 ? 0 : absoluteMin;
   const stepValue = (absoluteMax - realAbsoluteMin) / steps;
 
   const legendMarkers = [...Array(steps).keys()].map(x =>
@@ -158,6 +169,11 @@ export function getWrapperWidth(usePercentages, absoluteMax) {
     return;
   }
   return {width: (850 / absoluteMax) * 10 + '%'};
+}
+
+export function getGaugedWrapperWidth (value, restValuesSum, absoluteMax) {
+  const ajustedValue = value //n- restValuesSum
+  return { width: `${(ajustedValue * 100) / absoluteMax}%` }
 }
 
 export function getBarClassName(index, barchartClassNames) {
