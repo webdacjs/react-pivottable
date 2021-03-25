@@ -147,7 +147,8 @@ export function getLegendValues(
   // Dealing with % cases and post process function
   // where the min === max.
   const realAbsoluteMin = usePercentages || absoluteMin > 0 ? 0 : absoluteMin;
-  const stepValue = (absoluteMax - realAbsoluteMin) / steps;
+  const realAbsoluteMax = usePercentages && absoluteMax < 100 ? 100 : absoluteMax
+  const stepValue = (realAbsoluteMax - realAbsoluteMin) / steps;
 
   const legendMarkers = [...Array(steps).keys()].map(x =>
     getAdjustedValue((x + 1) * stepValue, usePercentages, legendFormatter)
