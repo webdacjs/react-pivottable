@@ -6,6 +6,7 @@ import {getSpanSize} from './TableUtils';
 import BarChartComponent from './BarChartComponent';
 import BarChartWrapperComponent from './BarChartWrapperComponent';
 import GaugeChartComponent from './GaugeChartComponent';
+import PopOverComponent from './PopOverComponent';
 
 import {
   getMaxValsAttrs,
@@ -104,18 +105,27 @@ class TableBarchartRenderer extends React.PureComponent {
               barchartClassNames={barchartClassNames}
               gauged={gauged}
             >
-              <ContainerDimensions>
-                {({width}) => (
-                  <GaugeChartComponent
-                    dataElement={valuesWithKeys}
-                    maxValue={absoluteMax}
-                    minValue={0}
-                    viewPortWidth={width}
-                    dimensions={valsAttrs}
-                    height={15}
-                  />
-                )}
-              </ContainerDimensions>
+              <PopOverComponent
+                showPopOver={showPopOver}
+                popOverFormatter={popOverFormatter}
+                rowkey={rowKey}
+                originalValues={originalValues}
+                valsAttrs={pivotData.props.vals}
+                rowAttrs={pivotData.props.rows}
+              >
+                <ContainerDimensions>
+                  {({width}) => (
+                    <GaugeChartComponent
+                      dataElement={valuesWithKeys}
+                      maxValue={absoluteMax}
+                      minValue={0}
+                      viewPortWidth={width}
+                      dimensions={valsAttrs}
+                      height={15}
+                    />
+                  )}
+                </ContainerDimensions>
+              </PopOverComponent>
             </BarChartWrapperComponent>
           )}
           {/* Stacked Bars Case */}
