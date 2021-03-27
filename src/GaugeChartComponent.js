@@ -1,7 +1,7 @@
 import React from 'react';
 import {useD3} from './d3hook.js';
 
-function GaugeChart({
+function GaugeChartComponent({
   dataElement,
   maxValue,
   minValue,
@@ -10,7 +10,6 @@ function GaugeChart({
   colors,
   height,
 }) {
-
   const randomColor = () => Math.floor(Math.random() * 16777215).toString(16);
 
   const getWidth = val => (val * viewPortWidth) / maxValue;
@@ -28,7 +27,7 @@ function GaugeChart({
   }
 
   const chartHeight = height || 30;
-  const yOffset = (chartHeight / 3) / 2.3;
+  const yOffset = chartHeight / 3 / 2.3;
   const innerheight = (chartHeight / 3) * 2;
 
   const chartColors = colors || ['#4e79a7', '#e05759', '#f28e2c'];
@@ -82,4 +81,4 @@ function GaugeChart({
   );
 }
 
-export default GaugeChart;
+export default GaugeChartComponent;
