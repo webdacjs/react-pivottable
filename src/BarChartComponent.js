@@ -33,7 +33,7 @@ export default function BarChartComponent({
     ...rowkey,
     ...originalValues.map(x => formatPopOverValue(x)),
   ];
-  
+
   const getStackedBar = () => (
     <div
       className={getBarClassName(index, barchartClassNames)}
