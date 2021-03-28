@@ -9,7 +9,12 @@ function GaugeChartComponent({
   dimensions,
   colors,
   height,
+  showBarValues,
+  usePercentages,
 }) {
+
+  const suffix = usePercentages ? '%' : ''
+
   const randomColor = () => Math.floor(Math.random() * 16777215).toString(16);
 
   const getWidth = val => (val * viewPortWidth) / maxValue;
@@ -29,11 +34,12 @@ function GaugeChartComponent({
   const chartHeight = height || 30;
   const yOffset = chartHeight / 3 / 2.3;
   const innerheight = (chartHeight / 3) * 2;
-
+  
   const chartColors = colors || ['#4e79a7', '#e05759', '#f28e2c'];
   const builtDataObject = dimensions.map((x, i) => ({
     dimension: x,
     y: i === 0 ? 0 : yOffset,
+    text: `${Math.round(dataElement[x])}${suffix}`,
     width: Math.abs(getWidth(dataElement[x])),
     height: i === 0 ? chartHeight : innerheight,
     color: chartColors[i] || randomColor(),
@@ -63,6 +69,20 @@ function GaugeChartComponent({
         .attr('fill', d => d.color)
         .attr('y', d => d.y)
         .attr('height', d => d.height);
+
+        if (showBarValues) {
+          svg
+          .selectAll('text')
+          .data(builtDataObjectWithX)
+          .enter()
+          .append("text")
+           .text(d => d.text)
+           .attr("text-anchor", "middle")
+           .attr('x', d => d.width - (d.text.length + 15))
+           .attr('y', d => d.y + 10)
+           .attr("font-size", "11px")
+           .attr("fill", "white");
+        }
     },
     [dataElement]
   );

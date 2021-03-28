@@ -125,6 +125,8 @@ class TableBarchartRenderer extends React.PureComponent {
                       dimensions={valsAttrs}
                       colors={barColors}
                       height={barHeight || 15}
+                      usePercentages={usePercentages}
+                      showBarValues={showBarValues}
                     />
                   )}
                 </ContainerDimensions>
