@@ -33,6 +33,8 @@ class TableBarchartRenderer extends React.PureComponent {
     const gauged = this.props.gauged;
     const postprocessfn = this.props.postprocessfn;
     const barchartClassNames = this.props.barchartClassNames;
+    const barColors = this.props.barColors;
+    const barHeight = this.props.barHeight;
     const showBarValues = this.props.showBarValues;
     const showLegend = this.props.showLegend;
     const showPopOver = this.props.showPopOver;
@@ -121,7 +123,8 @@ class TableBarchartRenderer extends React.PureComponent {
                       minValue={0}
                       viewPortWidth={width}
                       dimensions={valsAttrs}
-                      height={15}
+                      colors={barColors}
+                      height={barHeight || 15}
                     />
                   )}
                 </ContainerDimensions>
