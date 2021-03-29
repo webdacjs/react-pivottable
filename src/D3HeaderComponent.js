@@ -9,14 +9,15 @@ function D3HeaderComponent({
   maxValue,
   minValue,
 }) {
+
   function transformValue(val) {
-    if (val === '') {
+    if (val === '' || val === 0) {
       return minValue;
     }
-    if (val.includes('k')) {
+    if (String(val).includes('k')) {
       return parseFloat(val.replace('k', '')) * 1000;
     }
-    if (val.includes('M')) {
+    if (String(val).includes('M')) {
       return parseFloat(val.replace('M', '')) * 1000000;
     }
     return parseFloat(val);
@@ -28,6 +29,7 @@ function D3HeaderComponent({
   const ref = useD3(
     svg => {
       const svgClientSize = svg.node().getBoundingClientRect();
+      svg.selectAll("*").remove();
       const scale = d3
         .scaleLinear()
         .domain([d3.min(data), d3.max(data)])
