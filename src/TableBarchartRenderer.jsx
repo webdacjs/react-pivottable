@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ContainerDimensions from 'react-container-dimensions';
 import {PivotData} from './Utilities';
 import {getSpanSize} from './TableUtils';
 import BarChartComponent from './BarChartComponent';
@@ -37,6 +36,7 @@ class TableBarchartRenderer extends React.PureComponent {
     const barchartClassNames = this.props.barchartClassNames;
     const barColors = this.props.barColors;
     const barHeight = this.props.barHeight;
+    const barWidth = this.props.barWidth;
     const showBarValues = this.props.showBarValues;
     const showLegend = this.props.showLegend;
     const showPopOver = this.props.showPopOver;
@@ -117,13 +117,10 @@ class TableBarchartRenderer extends React.PureComponent {
                 valsAttrs={pivotData.props.vals}
                 rowAttrs={pivotData.props.rows}
               >
-                <ContainerDimensions>
-                  {({width}) => (
                     <GaugeChartComponent
                       dataElement={valuesWithKeys}
                       maxValue={absoluteMax}
                       minValue={0}
-                      viewPortWidth={width}
                       dimensions={valsAttrs}
                       colors={barColors}
                       height={barHeight || 15}
@@ -131,8 +128,6 @@ class TableBarchartRenderer extends React.PureComponent {
                       showBarValues={showBarValues}
                       buildD3BarChartBuilder={buildD3BarChartBuilder}
                     />
-                  )}
-                </ContainerDimensions>
               </PopOverComponent>
             </BarChartWrapperComponent>
           )}
@@ -239,17 +234,12 @@ class TableBarchartRenderer extends React.PureComponent {
               <th className="pvLegendValue" colSpan={rowAttrs.length}></th>
               {gauged && 
                 <th className="pvLegendValue" colSpan={legendValues.length}>
-                <ContainerDimensions>
-                  {({width}) => (
                     <D3HeaderComponent
                       legendValues={legendValues}
-                      viewPortWidth={width}
                       maxValue={absoluteMax}
                       minValue={0}
                       height={barHeight || 15}
                     />
-                  )}
-                </ContainerDimensions>
                 </th>
               }
               {!gauged &&

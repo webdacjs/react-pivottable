@@ -24,11 +24,11 @@ function D3HeaderComponent({
 
   const data = legendValues.map(x => transformValue(x));
   data.push(maxValue);
+
   const ref = useD3(
     svg => {
 
      const svgClientSize = svg.node().getBoundingClientRect();
-     console.log(svgClientSize)
      const scale = d3
         .scaleLinear()
         .domain([d3.min(data), d3.max(data)])
