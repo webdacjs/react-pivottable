@@ -11,6 +11,7 @@ function GaugeChartComponent({
   height,
   showBarValues,
   usePercentages,
+  buildD3BarChartBuilder
 }) {
   const suffix = usePercentages ? '%' : '';
 
@@ -58,30 +59,7 @@ function GaugeChartComponent({
 
   const ref = useD3(
     svg => {
-      svg
-        .selectAll('rect')
-        .data(builtDataObjectWithX)
-        .enter()
-        .append('rect')
-        .attr('width', d => d.width)
-        .attr('x', d => d.x)
-        .attr('fill', d => d.color)
-        .attr('y', d => d.y)
-        .attr('height', d => d.height);
-
-      if (showBarValues) {
-        svg
-          .selectAll('text')
-          .data(builtDataObjectWithX)
-          .enter()
-          .append('text')
-          .text(d => d.text)
-          .attr('text-anchor', 'middle')
-          .attr('x', d => d.width - (d.text.length + 15))
-          .attr('y', d => d.y + 10)
-          .attr('font-size', '11px')
-          .attr('fill', 'white');
-      }
+      buildD3BarChartBuilder(svg, builtDataObjectWithX, showBarValues, () => console.log)
     },
     [dataElement]
   );

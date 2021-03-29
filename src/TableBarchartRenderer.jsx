@@ -6,8 +6,9 @@ import {getSpanSize} from './TableUtils';
 import BarChartComponent from './BarChartComponent';
 import BarChartWrapperComponent from './BarChartWrapperComponent';
 import GaugeChartComponent from './GaugeChartComponent';
-import D3HeaderComponent from './D3HeaderComponent';
+import D3HeaderComponent from './D3HeaderComponent'
 import PopOverComponent from './PopOverComponent';
+import buildD3BarChartBuilder from './buildD3BarChartBuilder'
 
 import {
   getMaxValsAttrs,
@@ -128,6 +129,7 @@ class TableBarchartRenderer extends React.PureComponent {
                       height={barHeight || 15}
                       usePercentages={usePercentages}
                       showBarValues={showBarValues}
+                      buildD3BarChartBuilder={buildD3BarChartBuilder}
                     />
                   )}
                 </ContainerDimensions>
@@ -235,21 +237,21 @@ class TableBarchartRenderer extends React.PureComponent {
             </tr>,
             <tr style={{display: showLegend ? 'contents' : 'none'}}>
               <th className="pvLegendValue" colSpan={rowAttrs.length}></th>
-              {gauged && (
+              {gauged && 
                 <th className="pvLegendValue" colSpan={legendValues.length}>
-                  <ContainerDimensions>
-                    {({width}) => (
-                      <D3HeaderComponent
-                        legendValues={legendValues}
-                        viewPortWidth={width}
-                        maxValue={absoluteMax}
-                        minValue={0}
-                        height={barHeight || 15}
-                      />
-                    )}
-                  </ContainerDimensions>
+                <ContainerDimensions>
+                  {({width}) => (
+                    <D3HeaderComponent
+                      legendValues={legendValues}
+                      viewPortWidth={width}
+                      maxValue={absoluteMax}
+                      minValue={0}
+                      height={barHeight || 15}
+                    />
+                  )}
+                </ContainerDimensions>
                 </th>
-              )}
+              }
               {!gauged &&
                 legendValues.map((val, i) => (
                   <th

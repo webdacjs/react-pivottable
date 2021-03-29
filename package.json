@@ -38,6 +38,7 @@
     "d3": "6.6.1",
     "immutability-helper": "^2.3.1",
     "prop-types": "^15.5.10",
+    "queue": "6.0.2",
     "react-container-dimensions": "1.4.1",
     "react-draggable": "^3.0.3",
     "react-popover": "^0.5.10",
