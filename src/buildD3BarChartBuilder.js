@@ -1,7 +1,7 @@
 import queue from 'queue';
 
 const q = queue({results: []});
-q.concurrency = 20;
+q.concurrency = 80;
 q.autostart = true;
 
 export default function buildD3BarChartBuilder(svg, data, showBarValues) {
@@ -27,8 +27,8 @@ export default function buildD3BarChartBuilder(svg, data, showBarValues) {
         .attr('text-anchor', 'middle')
         .attr('x', d => d.width - (d.text.length + 15))
         .attr('y', d => d.y + 10)
-        .attr('font-size', '11px')
-        .attr('fill', 'white');
+        .attr('font-size', d => d.fontSize || '11px')
+        .attr('fill', d => d.fontColor || 'white');
     }
     setTimeout(function() {
       cb();
