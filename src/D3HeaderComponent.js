@@ -27,9 +27,8 @@ function D3HeaderComponent({
 
   const ref = useD3(
     svg => {
-
-     const svgClientSize = svg.node().getBoundingClientRect();
-     const scale = d3
+      const svgClientSize = svg.node().getBoundingClientRect();
+      const scale = d3
         .scaleLinear()
         .domain([d3.min(data), d3.max(data)])
         .range([0, svgClientSize.width]);

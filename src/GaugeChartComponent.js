@@ -10,7 +10,7 @@ function GaugeChartComponent({
   height,
   showBarValues,
   usePercentages,
-  buildD3BarChartBuilder
+  buildD3BarChartBuilder,
 }) {
   const suffix = usePercentages ? '%' : '';
 
@@ -58,7 +58,12 @@ function GaugeChartComponent({
 
   const ref = useD3(
     svg => {
-      buildD3BarChartBuilder(svg, builtDataObjectWithX, showBarValues, () => console.log)
+      buildD3BarChartBuilder(
+        svg,
+        builtDataObjectWithX,
+        showBarValues,
+        () => console.log
+      );
     },
     [dataElement]
   );

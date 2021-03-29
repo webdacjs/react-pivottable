@@ -5,9 +5,9 @@ import {getSpanSize} from './TableUtils';
 import BarChartComponent from './BarChartComponent';
 import BarChartWrapperComponent from './BarChartWrapperComponent';
 import GaugeChartComponent from './GaugeChartComponent';
-import D3HeaderComponent from './D3HeaderComponent'
+import D3HeaderComponent from './D3HeaderComponent';
 import PopOverComponent from './PopOverComponent';
-import buildD3BarChartBuilder from './buildD3BarChartBuilder'
+import buildD3BarChartBuilder from './buildD3BarChartBuilder';
 
 import {
   getMaxValsAttrs,
@@ -117,17 +117,17 @@ class TableBarchartRenderer extends React.PureComponent {
                 valsAttrs={pivotData.props.vals}
                 rowAttrs={pivotData.props.rows}
               >
-                    <GaugeChartComponent
-                      dataElement={valuesWithKeys}
-                      maxValue={absoluteMax}
-                      minValue={0}
-                      dimensions={valsAttrs}
-                      colors={barColors}
-                      height={barHeight || 15}
-                      usePercentages={usePercentages}
-                      showBarValues={showBarValues}
-                      buildD3BarChartBuilder={buildD3BarChartBuilder}
-                    />
+                <GaugeChartComponent
+                  dataElement={valuesWithKeys}
+                  maxValue={absoluteMax}
+                  minValue={0}
+                  dimensions={valsAttrs}
+                  colors={barColors}
+                  height={barHeight || 15}
+                  usePercentages={usePercentages}
+                  showBarValues={showBarValues}
+                  buildD3BarChartBuilder={buildD3BarChartBuilder}
+                />
               </PopOverComponent>
             </BarChartWrapperComponent>
           )}
@@ -232,16 +232,16 @@ class TableBarchartRenderer extends React.PureComponent {
             </tr>,
             <tr style={{display: showLegend ? 'contents' : 'none'}}>
               <th className="pvLegendValue" colSpan={rowAttrs.length}></th>
-              {gauged && 
+              {gauged && (
                 <th className="pvLegendValue" colSpan={legendValues.length}>
-                    <D3HeaderComponent
-                      legendValues={legendValues}
-                      maxValue={absoluteMax}
-                      minValue={0}
-                      height={barHeight || 15}
-                    />
+                  <D3HeaderComponent
+                    legendValues={legendValues}
+                    maxValue={absoluteMax}
+                    minValue={0}
+                    height={barHeight || 15}
+                  />
                 </th>
-              }
+              )}
               {!gauged &&
                 legendValues.map((val, i) => (
                   <th
