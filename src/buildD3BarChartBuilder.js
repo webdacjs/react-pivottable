@@ -1,10 +1,14 @@
 import queue from 'queue';
 
-const q = queue({results: []});
+const q = queue();
 q.concurrency = 80;
 q.autostart = true;
 
-export default function buildD3BarChartBuilder(svg, data, showBarValues) {
+export function setD3BuilderConcurrency (concurrency) {
+  q.concurrency = concurrency
+}
+
+export function buildD3BarChartBuilder(svg, data, showBarValues) {
   q.push(function(cb) {
     svg
       .selectAll('rect')
@@ -25,7 +29,7 @@ export default function buildD3BarChartBuilder(svg, data, showBarValues) {
         .append('text')
         .text(d => d.text)
         .attr('text-anchor', 'middle')
-        .attr('x', d => d.width - (d.text.length + 15))
+        .attr('x', d => `${d.textX}%` || `${d.width - (d.text.length + 15)}%`)
         .attr('y', d => d.y + 10)
         .attr('font-size', d => d.fontSize || '11px')
         .attr('fill', d => d.fontColor || 'white');
