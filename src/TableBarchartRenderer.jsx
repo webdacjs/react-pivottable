@@ -243,8 +243,7 @@ class TableBarchartRenderer extends React.PureComponent {
                 <th className="pvLegendValue" colSpan={legendValues.length}>
                   <D3HeaderComponent
                     legendValues={legendValues}
-                    maxValue={absoluteMax}
-                    minValue={0}
+                    usePercentages={usePercentages}
                     height={barHeight || 15}
                     buildD3BarChartBuilder={buildD3BarChartBuilder}
                   />

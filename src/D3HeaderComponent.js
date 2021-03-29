@@ -2,13 +2,13 @@ import React from 'react';
 import * as d3 from 'd3';
 import {useD3} from './d3hook.js';
 
-function D3HeaderComponent({height, legendValues, buildD3BarChartBuilder}) {
+function D3HeaderComponent({height, legendValues, usePercentages, buildD3BarChartBuilder}) {
   const getWidth = val => (val + 1 * 100) / legendValues.length;
   legendValues.push('');
 
   const builtDataObject = legendValues.map((x, i) => ({
     dimension: x,
-    text: x,
+    text: usePercentages && x !== '' ? `${x}%` : x,
     y: 0,
     width: getWidth(i),
     height: height || 16,
