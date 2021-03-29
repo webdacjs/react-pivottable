@@ -5,19 +5,18 @@ function GaugeChartComponent({
   dataElement,
   maxValue,
   minValue,
-  viewPortWidth,
   dimensions,
   colors,
   height,
   showBarValues,
   usePercentages,
-  buildD3BarChartBuilder
+  buildD3BarChartBuilder,
 }) {
   const suffix = usePercentages ? '%' : '';
 
   const randomColor = () => Math.floor(Math.random() * 16777215).toString(16);
 
-  const getWidth = val => (val * viewPortWidth) / maxValue;
+  const getWidth = val => (val * 100) / maxValue;
 
   const values = dimensions.map(x => dataElement[x]);
 
@@ -40,7 +39,7 @@ function GaugeChartComponent({
     dimension: x,
     y: i === 0 ? 0 : yOffset,
     text: `${Math.round(dataElement[x])}${suffix}`,
-    width: Math.abs(getWidth(dataElement[x])),
+    width: getWidth(dataElement[x]),
     height: i === 0 ? chartHeight : innerheight,
     color: chartColors[i] || randomColor(),
   }));
@@ -59,7 +58,12 @@ function GaugeChartComponent({
 
   const ref = useD3(
     svg => {
-      buildD3BarChartBuilder(svg, builtDataObjectWithX, showBarValues, () => console.log)
+      buildD3BarChartBuilder(
+        svg,
+        builtDataObjectWithX,
+        showBarValues,
+        () => console.log
+      );
     },
     [dataElement]
   );

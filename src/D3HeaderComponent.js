@@ -25,15 +25,15 @@ function D3HeaderComponent({
   const data = legendValues.map(x => transformValue(x));
   data.push(maxValue);
 
-  const scale = d3
-    .scaleLinear()
-    .domain([d3.min(data), d3.max(data)])
-    .range([0, viewPortWidth]);
-
-  const xAxis = d3.axisBottom().scale(scale);
-
   const ref = useD3(
     svg => {
+      const svgClientSize = svg.node().getBoundingClientRect();
+      const scale = d3
+        .scaleLinear()
+        .domain([d3.min(data), d3.max(data)])
+        .range([0, svgClientSize.width]);
+      const xAxis = d3.axisBottom().scale(scale);
+
       svg
         .attr('width', viewPortWidth)
         .attr('height', height)

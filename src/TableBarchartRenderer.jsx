@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ContainerDimensions from 'react-container-dimensions';
 import {PivotData} from './Utilities';
 import {getSpanSize} from './TableUtils';
 import BarChartComponent from './BarChartComponent';
 import BarChartWrapperComponent from './BarChartWrapperComponent';
 import GaugeChartComponent from './GaugeChartComponent';
-import D3HeaderComponent from './D3HeaderComponent'
+import D3HeaderComponent from './D3HeaderComponent';
 import PopOverComponent from './PopOverComponent';
-import buildD3BarChartBuilder from './buildD3BarChartBuilder'
+import buildD3BarChartBuilder from './buildD3BarChartBuilder';
 
 import {
   getMaxValsAttrs,
@@ -37,6 +36,7 @@ class TableBarchartRenderer extends React.PureComponent {
     const barchartClassNames = this.props.barchartClassNames;
     const barColors = this.props.barColors;
     const barHeight = this.props.barHeight;
+    const barWidth = this.props.barWidth;
     const showBarValues = this.props.showBarValues;
     const showLegend = this.props.showLegend;
     const showPopOver = this.props.showPopOver;
@@ -117,22 +117,17 @@ class TableBarchartRenderer extends React.PureComponent {
                 valsAttrs={pivotData.props.vals}
                 rowAttrs={pivotData.props.rows}
               >
-                <ContainerDimensions>
-                  {({width}) => (
-                    <GaugeChartComponent
-                      dataElement={valuesWithKeys}
-                      maxValue={absoluteMax}
-                      minValue={0}
-                      viewPortWidth={width}
-                      dimensions={valsAttrs}
-                      colors={barColors}
-                      height={barHeight || 15}
-                      usePercentages={usePercentages}
-                      showBarValues={showBarValues}
-                      buildD3BarChartBuilder={buildD3BarChartBuilder}
-                    />
-                  )}
-                </ContainerDimensions>
+                <GaugeChartComponent
+                  dataElement={valuesWithKeys}
+                  maxValue={absoluteMax}
+                  minValue={0}
+                  dimensions={valsAttrs}
+                  colors={barColors}
+                  height={barHeight || 15}
+                  usePercentages={usePercentages}
+                  showBarValues={showBarValues}
+                  buildD3BarChartBuilder={buildD3BarChartBuilder}
+                />
               </PopOverComponent>
             </BarChartWrapperComponent>
           )}
@@ -237,21 +232,16 @@ class TableBarchartRenderer extends React.PureComponent {
             </tr>,
             <tr style={{display: showLegend ? 'contents' : 'none'}}>
               <th className="pvLegendValue" colSpan={rowAttrs.length}></th>
-              {gauged && 
+              {gauged && (
                 <th className="pvLegendValue" colSpan={legendValues.length}>
-                <ContainerDimensions>
-                  {({width}) => (
-                    <D3HeaderComponent
-                      legendValues={legendValues}
-                      viewPortWidth={width}
-                      maxValue={absoluteMax}
-                      minValue={0}
-                      height={barHeight || 15}
-                    />
-                  )}
-                </ContainerDimensions>
+                  <D3HeaderComponent
+                    legendValues={legendValues}
+                    maxValue={absoluteMax}
+                    minValue={0}
+                    height={barHeight || 15}
+                  />
                 </th>
-              }
+              )}
               {!gauged &&
                 legendValues.map((val, i) => (
                   <th
