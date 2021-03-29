@@ -8,7 +8,7 @@ function D3HeaderComponent({height, legendValues, usePercentages, buildD3BarChar
 
   const builtDataObject = legendValues.map((x, i) => ({
     dimension: x,
-    text: usePercentages && x !== '' ? `${x}%` : x,
+    text: x,
     y: 0,
     width: getWidth(i),
     height: height || 16,
