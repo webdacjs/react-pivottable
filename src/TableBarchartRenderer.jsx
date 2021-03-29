@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ContainerDimensions from 'react-container-dimensions';
 import {PivotData} from './Utilities';
 import {getSpanSize} from './TableUtils';
 import BarChartComponent from './BarChartComponent';
 import BarChartWrapperComponent from './BarChartWrapperComponent';
+import GaugeChartComponent from './GaugeChartComponent';
+import PopOverComponent from './PopOverComponent';
 
 import {
   getMaxValsAttrs,
@@ -30,6 +33,8 @@ class TableBarchartRenderer extends React.PureComponent {
     const gauged = this.props.gauged;
     const postprocessfn = this.props.postprocessfn;
     const barchartClassNames = this.props.barchartClassNames;
+    const barColors = this.props.barColors;
+    const barHeight = this.props.barHeight;
     const showBarValues = this.props.showBarValues;
     const showLegend = this.props.showLegend;
     const showPopOver = this.props.showPopOver;
@@ -91,10 +96,45 @@ class TableBarchartRenderer extends React.PureComponent {
       const keys = Object.keys(valuesWithKeys);
       const values = keys.map(k => valuesWithKeys[k]);
       const originalValues = keys.map(k => value[k]);
+
       return (
         <td className="pvtVal pvtValBarChart" colSpan={steps}>
+          {/* Gauged Bars Case */}
+          {!stacked && gauged && (
+            <BarChartWrapperComponent
+              key={`wrapper-${i}-${j}`}
+              index={i}
+              barchartClassNames={barchartClassNames}
+              gauged={gauged}
+            >
+              <PopOverComponent
+                showPopOver={showPopOver}
+                popOverFormatter={popOverFormatter}
+                rowkey={rowKey}
+                originalValues={originalValues}
+                valsAttrs={pivotData.props.vals}
+                rowAttrs={pivotData.props.rows}
+              >
+                <ContainerDimensions>
+                  {({width}) => (
+                    <GaugeChartComponent
+                      dataElement={valuesWithKeys}
+                      maxValue={absoluteMax}
+                      minValue={0}
+                      viewPortWidth={width}
+                      dimensions={valsAttrs}
+                      colors={barColors}
+                      height={barHeight || 15}
+                      usePercentages={usePercentages}
+                      showBarValues={showBarValues}
+                    />
+                  )}
+                </ContainerDimensions>
+              </PopOverComponent>
+            </BarChartWrapperComponent>
+          )}
           {/* Stacked Bars Case */}
-          {(stacked || gauged) && (
+          {stacked && !gauged && (
             <BarChartWrapperComponent
               key={`wrapper-${i}-${j}`}
               index={i}
@@ -194,17 +234,18 @@ class TableBarchartRenderer extends React.PureComponent {
             </tr>,
             <tr style={{display: showLegend ? 'contents' : 'none'}}>
               <th className="pvLegendValue" colSpan={rowAttrs.length}></th>
-              {legendValues.map((val, i) => (
-                <th
-                  className={`pvLegendValue`}
-                  style={{width: `${100 / legendValues.length}%`}}
-                  key={`legend-${i}`}
-                >
-                  <span className="legendVal" key={`legend-val-${i}`}>
-                    {val}
-                  </span>
-                </th>
-              ))}
+              {!gauged &&
+                legendValues.map((val, i) => (
+                  <th
+                    className={`pvLegendValue`}
+                    style={{width: `${100 / legendValues.length}%`}}
+                    key={`legend-${i}`}
+                  >
+                    <span className="legendVal" key={`legend-val-${i}`}>
+                      {val}
+                    </span>
+                  </th>
+                ))}
             </tr>,
           ]}
         </thead>

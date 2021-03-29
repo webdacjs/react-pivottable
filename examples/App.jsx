@@ -148,6 +148,36 @@ class PivotTableUISmartWrapper extends React.PureComponent {
                     usePercentages={true}
                     hideRowTotals={true}
                 />
+                <h3>6a. Pivot with Barchart (percentage values / gauged with postprocess show Bar values)</h3>
+                <PivotTable
+                    key='percentageGaugedWithBarValue'
+                    data={tips}
+                    rows={['Payer Gender', 'Day of Week']}
+                    rowLabels={[null, 'Day of Week Replacement']}
+                    cols={[]}
+                    aggregatorName={'MultiSum'}
+                    vals={['Total Bill', 'Tip']}
+                    rendererName={'Table Barchart'}
+                    formatter={x => parseFloat(x).toFixed(1)}
+                    popOverFormatter={x => `$ ${parseFloat(x).toFixed(2)}`}
+                    showLegend={true}
+                    legendSteps={10}
+                    minVal={0}
+                    maxVal={100}
+                    postprocessfn={obj => {
+                        const tipPerc = (obj['Tip'] / obj['Total Bill']) * 100
+                        const totPerc = 100
+                        return {
+                            Tip: tipPerc,
+                            'Total Bill': totPerc
+                    }}}
+                    gauged={true}
+                    showBarValues={true}
+                    showPopOver={true}
+                    usePercentages={true}
+                    hideRowTotals={true}
+                />
+
                 <h3>7. Pivot with Barchart (percentage values / stacked with postprocess show Bar values, overflowing)</h3>
                 <PivotTable
                     key='percentageOverFLowing'

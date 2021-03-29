@@ -3,17 +3,13 @@ import React from 'react';
 import {getWrapperWidth, getGaugedWrapperWidth} from './TableBarchartUtils';
 
 export default function BarChartWapperComponent({
-  index,
   barchartClassNames,
   usePercentages,
   absoluteMax,
   stacked,
   gauged,
   children,
-  values,
 }) {
-  const sumReducer = array => array.reduce((a, b) => a + b, 0);
-
   const getBarWrapperClassName = () => {
     if (barchartClassNames && barchartClassNames.wrapper) {
       return barchartClassNames.wrapper;
@@ -35,7 +31,7 @@ export default function BarChartWapperComponent({
     <div
       className={getBarWrapperClassName()}
       key={`bar-chart-${Math.random()}`}
-      style={getWrapperWidth(usePercentages, absoluteMax)}
+      style={getGaugedWrapperWidth(usePercentages, absoluteMax)}
     >
       {children}
     </div>

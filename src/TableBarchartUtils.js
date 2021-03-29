@@ -147,7 +147,8 @@ export function getLegendValues(
   // Dealing with % cases and post process function
   // where the min === max.
   const realAbsoluteMin = usePercentages || absoluteMin > 0 ? 0 : absoluteMin;
-  const realAbsoluteMax = usePercentages && absoluteMax < 100 ? 100 : absoluteMax
+  const realAbsoluteMax =
+    usePercentages && absoluteMax < 100 ? 100 : absoluteMax;
   const stepValue = (realAbsoluteMax - realAbsoluteMin) / steps;
 
   const legendMarkers = [...Array(steps).keys()].map(x =>
@@ -174,8 +175,7 @@ export function getWrapperWidth(usePercentages, absoluteMax) {
 }
 
 export function getGaugedWrapperWidth(value, restValuesSum, absoluteMax) {
-  const ajustedValue = value; //n- restValuesSum
-  return {width: `${(ajustedValue * 100) / absoluteMax}%`};
+  return {width: '100%'};
 }
 
 export function getBarClassName(index, barchartClassNames) {
