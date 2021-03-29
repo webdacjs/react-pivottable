@@ -7,31 +7,31 @@ function D3HeaderComponent({
   height,
   legendValues,
   maxValue,
-  minValue
+  minValue,
 }) {
-
   function transformValue(val) {
-      if (val === '') {
-          return minValue
-      }
-      if (val.includes('k')) {
-          return parseFloat(val.replace('k', '')) * 1000
-      }
-      if (val.includes('M')) {
-        return parseFloat(val.replace('M', '')) * 1000000
-      }
-      return parseFloat(val)
+    if (val === '') {
+      return minValue;
+    }
+    if (val.includes('k')) {
+      return parseFloat(val.replace('k', '')) * 1000;
+    }
+    if (val.includes('M')) {
+      return parseFloat(val.replace('M', '')) * 1000000;
+    }
+    return parseFloat(val);
   }
 
-  const data = legendValues.map(x => transformValue(x))
-  data.push(maxValue)
+  const data = legendValues.map(x => transformValue(x));
+  data.push(maxValue);
 
-  const scale = d3.scaleLinear()
+  const scale = d3
+    .scaleLinear()
     .domain([d3.min(data), d3.max(data)])
     .range([0, viewPortWidth]);
 
   const xAxis = d3.axisBottom().scale(scale);
-  console.log(xAxis)
+  console.log(xAxis);
 
   const ref = useD3(
     svg => {
@@ -41,7 +41,7 @@ function D3HeaderComponent({
         .append('g')
         .call(xAxis)
         .attr('stroke-width', 0)
-        .attr('transform', `translate(0, -2)`)
+        .attr('transform', `translate(0, -2)`);
     },
     [legendValues]
   );
