@@ -2,45 +2,37 @@ import React from 'react';
 import * as d3 from 'd3';
 import {useD3} from './d3hook.js';
 
-function D3HeaderComponent({
-  viewPortWidth,
-  height,
-  legendValues,
-  maxValue,
-  minValue,
-}) {
-  function transformValue(val) {
-    if (val === '') {
-      return minValue;
-    }
-    if (val.includes('k')) {
-      return parseFloat(val.replace('k', '')) * 1000;
-    }
-    if (val.includes('M')) {
-      return parseFloat(val.replace('M', '')) * 1000000;
-    }
-    return parseFloat(val);
-  }
+function D3HeaderComponent({height, legendValues, usePercentages, buildD3BarChartBuilder}) {
+  const getWidth = val => (val + 1 * 100) / legendValues.length;
+  legendValues.push('');
 
-  const data = legendValues.map(x => transformValue(x));
-  data.push(maxValue);
+  const builtDataObject = legendValues.map((x, i) => ({
+    dimension: x,
+    text: usePercentages && x !== '' ? `${x}%` : x,
+    y: 0,
+    width: getWidth(i),
+    height: height || 16,
+    color: 'transparent',
+    fontColor: '#495057',
+  }));
+  const widths = builtDataObject.map(x => x.width);
+  const builtDataObjectWithX = builtDataObject.map((item, index) =>
+    Object.assign(item, {
+      x: index === 0 ? 0 : widths.slice(0, index).reduce((a, b) => a + b, 0),
+      textX:
+        index === 0 ? 0 : widths.slice(0, index).reduce((a, b) => a + b, 0) + 1,
+    })
+  );
 
   const ref = useD3(
     svg => {
-      const svgClientSize = svg.node().getBoundingClientRect();
-      const scale = d3
-        .scaleLinear()
-        .domain([d3.min(data), d3.max(data)])
-        .range([0, svgClientSize.width]);
-      const xAxis = d3.axisBottom().scale(scale);
-
-      svg
-        .attr('width', viewPortWidth)
-        .attr('height', height)
-        .append('g')
-        .call(xAxis)
-        .attr('stroke-width', 0)
-        .attr('transform', `translate(0, -2)`);
+      svg.selectAll('*').remove();
+      buildD3BarChartBuilder(
+        svg,
+        builtDataObjectWithX,
+        true,
+        () => console.log
+      );
     },
     [legendValues]
   );
