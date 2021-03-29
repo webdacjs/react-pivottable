@@ -31,7 +31,6 @@ function D3HeaderComponent({
     .range([0, viewPortWidth]);
 
   const xAxis = d3.axisBottom().scale(scale);
-  console.log(xAxis);
 
   const ref = useD3(
     svg => {
