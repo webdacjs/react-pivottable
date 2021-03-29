@@ -7,7 +7,10 @@ import BarChartWrapperComponent from './BarChartWrapperComponent';
 import GaugeChartComponent from './GaugeChartComponent';
 import D3HeaderComponent from './D3HeaderComponent';
 import PopOverComponent from './PopOverComponent';
-import {buildD3BarChartBuilder, setD3BuilderConcurrency} from './buildD3BarChartBuilder';
+import {
+  buildD3BarChartBuilder,
+  setD3BuilderConcurrency,
+} from './buildD3BarChartBuilder';
 
 import {
   getMaxValsAttrs,
@@ -37,7 +40,6 @@ class TableBarchartRenderer extends React.PureComponent {
     const barchartClassNames = this.props.barchartClassNames;
     const barColors = this.props.barColors;
     const barHeight = this.props.barHeight;
-    const barWidth = this.props.barWidth;
     const showBarValues = this.props.showBarValues;
     const showLegend = this.props.showLegend;
     const showPopOver = this.props.showPopOver;
@@ -75,9 +77,9 @@ class TableBarchartRenderer extends React.PureComponent {
     );
 
     if (d3BuilderConcurrency) {
-      setD3BuilderConcurrency(d3BuilderConcurrency)
+      setD3BuilderConcurrency(d3BuilderConcurrency);
     }
- 
+
     const rowKeys = pivotData.getRowKeys();
 
     const setSelectedRow = rowid => {

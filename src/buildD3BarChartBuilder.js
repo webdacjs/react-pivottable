@@ -4,8 +4,8 @@ const q = queue();
 q.concurrency = 80;
 q.autostart = true;
 
-export function setD3BuilderConcurrency (concurrency) {
-  q.concurrency = concurrency
+export function setD3BuilderConcurrency(concurrency) {
+  q.concurrency = concurrency;
 }
 
 export function buildD3BarChartBuilder(svg, data, showBarValues) {

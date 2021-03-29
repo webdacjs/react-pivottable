@@ -66,7 +66,9 @@ export function getMaxValsAttrs(
       return obj;
     }, {});
   }
-  const totalRowsValsAttrAdjusted = postprocessfn ? totalRowsValsAttr.map(x => postprocessfn(x)) : totalRowsValsAttr 
+  const totalRowsValsAttrAdjusted = postprocessfn
+    ? totalRowsValsAttr.map(x => postprocessfn(x))
+    : totalRowsValsAttr;
   const maxValsAttrs = vals.reduce((obj, val) => {
     obj[val] = Math.max(
       ...totalRowsValsAttrAdjusted
