@@ -1,7 +1,7 @@
 import queue from 'queue'
 
 const q = queue({ results: [] })
-q.concurrency = 10
+q.concurrency = 20
 q.autostart = true
 
 export default function buildD3BarChartBuilder (svg, data, showBarValues) {
@@ -11,8 +11,8 @@ export default function buildD3BarChartBuilder (svg, data, showBarValues) {
         .data(data)
         .enter()
         .append('rect')
-        .attr('width', d => d.width)
-        .attr('x', d => d.x)
+        .attr('width', d => `${d.width}%`)
+        .attr('x', d => `${d.x}%`)
         .attr('fill', d => d.color)
         .attr('y', d => d.y)
         .attr('height', d => d.height);
