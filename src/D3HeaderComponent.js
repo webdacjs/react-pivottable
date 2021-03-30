@@ -20,7 +20,7 @@ function D3HeaderComponent({height, legendValues, usePercentages, buildD3BarChar
     Object.assign(item, {
       x: index === 0 ? 0 : widths.slice(0, index).reduce((a, b) => a + b, 0),
       textX:
-        index === 0 ? 0 : widths.slice(0, index).reduce((a, b) => a + b, 0) + 1,
+        index === 0 ? 0 : widths.slice(0, index).reduce((a, b) => a + b, 0) + (widths[index] / 2),
     })
   );
 
