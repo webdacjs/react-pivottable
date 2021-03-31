@@ -39,6 +39,7 @@ function D3HeaderComponent({height, legendValues, usePercentages, buildD3BarChar
 
   return (
     <svg
+      className={'svgHeader'}
       ref={ref}
       style={{
         height: height,
