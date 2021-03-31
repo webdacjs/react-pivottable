@@ -44,6 +44,7 @@ export default function PopOverComponent({
     <Popover
       isOpen={showPopOver ? hovered : false}
       preferPlace={'below'}
+      enterExitTransitionDurationMs={false}
       body={getPopOver()}
     >
       <div onMouseOver={() => setHovered(true)} onMouseOut={() => setHovered()}>

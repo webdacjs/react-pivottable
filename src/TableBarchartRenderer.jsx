@@ -120,6 +120,7 @@ class TableBarchartRenderer extends React.PureComponent {
                 showPopOver={showPopOver}
                 popOverFormatter={popOverFormatter}
                 rowkey={rowKey}
+                height={barHeight || 15}
                 originalValues={originalValues}
                 valsAttrs={pivotData.props.vals}
                 rowAttrs={pivotData.props.rows}
@@ -220,8 +221,9 @@ class TableBarchartRenderer extends React.PureComponent {
                 >
                   <div className="bar-chart-label-wrapper">
                     {valsAttrs.map((x, i) => (
-                      <div className="bar-chart-bar-label">
+                      <div className="bar-chart-bar-label" key={`label-wrapper-${i}`}>
                         <div
+                          key={`label-wrapper-inner-${i}`}
                           className={getBarClassName(i)}
                           style={{width: '10px'}}
                         />
