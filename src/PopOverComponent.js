@@ -43,7 +43,8 @@ export default function PopOverComponent({
   return (
     <Popover
       isOpen={showPopOver ? hovered : false}
-      preferPlace={'below'}
+      place={'below'}
+      tipSize={.01}
       enterExitTransitionDurationMs={false}
       body={getPopOver()}
     >
